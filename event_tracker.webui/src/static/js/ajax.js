@@ -1,0 +1,16 @@
+$(document).on('submit','#todo-form',function(e)
+               {
+  console.log('hello');
+  e.preventDefault();
+  $.ajax({
+    type:'POST',
+    url:'/',
+    data:{
+      data_from_js:$("#todo_id").val()
+    },
+    success:function()
+    {
+      alert(data_from_js);
+    }
+  })
+});

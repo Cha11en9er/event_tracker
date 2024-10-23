@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Data Update Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Обновляемая таблица данных:</h1>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody id="dataDisplay">
+            <tr>
+                <td colspan="2">Загрузка...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        var socket = io();
+
+        socket.on('data_update', function(data) {
+            var display = document.getElementById('dataDisplay');
+            display.innerHTML = '';  // Очищаем предыдущие данные
+            data.forEach(function(item) {
+                var row = document.createElement('tr');
+                var cellId = document.createElement('td');
+                var cellValue = document.createElement('td');
+                cellId.innerText = item.id;
+                cellValue.innerText = item.value;
+                row.appendChild(cellId);
+                row.appendChild(cellValue);
+                display.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>

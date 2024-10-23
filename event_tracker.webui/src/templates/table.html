@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таблица данных</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Данные из базы данных:</h1>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Столбец 1</th>
+                <th>Столбец 2</th>
+                <th>Столбец 3</th>
+            </tr>
+        </thead>
+        <tbody id="dataDisplay">
+            <tr>
+                <td colspan="4">Загрузка...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function fetchData() {
+            $.ajax({
+                url: '/get_data',
+                type: 'GET',
+                success: function(data) {
+                    var display = $('#dataDisplay');
+                    display.empty();  // Очищаем предыдущие данные
+                    data.forEach(function(item) {
+                        var row = $('<tr></tr>');
+                        row.append($('<td></td>').text(item.id));
+                        row.append($('<td></td>').text(item.column1));
+                        row.append($('<td></td>').text(item.column2));
+                        row.append($('<td></td>').text(item.column3));
+                        display.append(row);
+                    });
+                },
+                error: function() {
+                    $('#dataDisplay').html('<tr><td colspan="4">Ошибка при загрузке данных.</td></tr>');
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            fetchData();  // Первоначальная загрузка данных
+            setInterval(fetchData, 5000);  // Автообновление данных каждые 5 секунд
+        });
+    </script>
+</body>
+</html>

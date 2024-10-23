@@ -1,0 +1,97 @@
+{% extends 'main.html' %}
+
+{% block title %} Главная {% endblock %}
+
+{% block header %}
+<h1 class="header_title">Event tracker</h1>
+
+<div class="header_links">
+    <a class="btn_login" href="">Профиль пользователся {{ account['fullname'] }}</a>
+    <a class="btn_registr" href="{{ url_for('logout') }}">Выйти</a>
+</div>
+
+{% endblock %}
+
+{% block main %}
+<div class="schedule_main">
+
+    <table class="schedule_table" id="schedule_table_id">
+        <thead class="table_title">
+            <th>таблица ивентов</th>
+            <th>
+                <button class="create_event_btn" onclick="open_form()">Добавить ивент</button>
+            </th>
+        </thead>
+
+        <tbody>
+            <tr class="table_name">
+                <td class="table_data">Дата</td>
+                <td class="table_name">Название</td>
+                <td class="table_discription">Описание</td>
+                <td class="table_count">Тип ивента</td>
+                <td class="user_count">Кол-во пользователей</td>
+                <td>Кнопки</td>
+            </tr>
+            {% for row in data %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+                <td>{{ row[4] }}</td>
+                <td>
+                    <a href="{{ url_for('current_event', event_id_from_form = row[5] ) }}">Подробнее</a>
+                    
+                    <form id="subscribe_form" method="POST">
+                        <input type="hidden" id="subscribe_data_from_form" name="subscribe_data_from_form" value="{{ row[5] }}, {{ account['user_id'] }}">
+                        <button id="subscribe_button" type="submit">Подписаться</button>
+                    </form>
+
+                    <a href="">Отписаться</a>
+                </td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ############################ -->
+    <!-- <script>
+        function fetchData() {
+            $.ajax({
+                url: '/update_schedule',
+                type: 'GET',
+                success: function(response) {
+                    $('#value').text(response.value);
+                    $('#description').text(response.description);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Ошибка при получении данных:', error);
+                }
+            });
+        }
+
+        // Обновляем данные каждые 5 секунд
+        setInterval(fetchData, 5000);
+    </script> -->
+
+    <!-- ############################ -->
+</div>
+
+<div class="form_popup">
+    <form class="form_container" id="schedule_form" action="/create_event" method="POST">
+        <div class="form_data">
+            <div class="form_header">
+                <button type="button" class="btn cancel" onclick="close_form()">Закрыть</button>
+                <h1>Информация о ивенте</h1>
+            </div>
+
+            <input class="form_input" type="text" name="event_date" placeholder="Дата события">
+            <input class="form_input" type="text" name="event_name" placeholder="Название события">
+            <input class="form_input" type="text" name="event_discription" placeholder="Описание события">
+
+            <input type="submit" value="Добавить новый">
+        </div>
+    </form>
+</div>
+{% endblock %}

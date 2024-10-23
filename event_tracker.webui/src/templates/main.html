@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>{% block title %} Главная страница {% endblock %}</title>
+</head>
+<body>
+    <div class="main_header">
+        {% block header %}
+            <h1 class="header_title">Event tracker</h1>
+            
+            <div class="header_links">
+                <a class="btn_login" href="{{ url_for('login') }}">Login</a>
+                <a class="btn_registr" href="{{ url_for('register') }}">Register</a>
+            </div>
+        {% endblock %}
+    </div>
+
+    <div class="main_main">
+        {% block main %}
+            <h1 class="main_title">Event tracker</h1>
+
+            <div class="main_text">
+                <p>Приложение для учёта вне рабочих активностей</p>
+            </div>
+
+            <div class="main_btns">
+                <a class="main_btn_login" href="{{ url_for('login') }}">Login</a>
+                <a class="main_btn_registr" href="{{ url_for('register') }}">Register</a>
+            </div>
+        {% endblock %}
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/schedule_form.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+    integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/subscribe.js') }}"></script>
+</body>
+</html>
