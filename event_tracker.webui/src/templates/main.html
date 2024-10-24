@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>{% block title %} Главная страница {% endblock %}</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="{{ url_for('static', filename='js/subscribe.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/schedule_form.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/schedule.js') }}"></script>
 </head>
 <body>
     <div class="main_header">
@@ -33,10 +38,11 @@
         {% endblock %}
     </div>
     
-    <script src="{{ url_for('static', filename='js/schedule_form.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.js"
+
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.js"
     integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-    crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/subscribe.js') }}"></script>
+    crossorigin="anonymous"></script> -->
+
+
 </body>
 </html>

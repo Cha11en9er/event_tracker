@@ -1,4 +1,4 @@
-from flask import Flask, request, session, redirect, url_for, render_template, flash
+from flask import Flask, request, session, redirect, url_for, render_template, flash, jsonify
 from flask_socketio import SocketIO, emit
 import psycopg2, psycopg2.extras
 import json 
@@ -10,8 +10,10 @@ db_password = '**'
 db_host = "**"
 db_port = "**"
 
+def db_connection():
+    connection = psycopg2.connect(database="EventTrackerDB", user="postgres", password = db_password, host = db_host, port = db_port) 
+    return connection
 
-connection = psycopg2.connect(database="EventTrackerDB", user="postgres", password = db_password, host = db_host, port = db_port) 
 
 @app.route('/')
 def main():
@@ -19,6 +21,7 @@ def main():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    connection = db_connection()
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     if request.method == 'POST':
@@ -60,7 +63,7 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
+    connection = db_connection()
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     if request.method == 'POST':
@@ -83,16 +86,56 @@ def login():
 
     return render_template('login.html')
 
-@app.route('/schedule', methods=['GET', 'POST'])
-def schedule():
+# @app.route('/schedule', methods=['GET', 'POST'])
+# def schedule():
 
+#     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+#     if 'loggedin' in session:
+#         cursor.execute('SELECT * FROM evt.user WHERE user_id = %s', [session['id']])
+#         account = cursor.fetchone()
+
+#         cursor.execute('''
+#                         select
+#                             e.event_date,
+#                             e.event_name,
+#                             e.discription,
+#                             et.event_type_name,
+#                             count(ep.event_participation_id),
+#                             e.event_id
+#                         from
+#                             evt.event as e
+#                         inner join evt.event_type as et on
+#                             e.event_type_id = et.event_type_id
+#                         left join evt.event_participation ep on
+#                             e.event_id = ep.event_id
+#                         group by 
+#                             e.event_id,
+#                             et.event_type_name
+#                         order by
+#                             e.event_date''')
+#         data = cursor.fetchall()
+
+#         return render_template('schedule.html', account = account, data = data)
+
+#     return redirect(url_for('login'))
+
+@app.route('/schedule')
+def schedule():
+    connection = db_connection()
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     if 'loggedin' in session:
         cursor.execute('SELECT * FROM evt.user WHERE user_id = %s', [session['id']])
         account = cursor.fetchone()
+        return render_template('schedule.html', account = account)
 
-        cursor.execute('''
+@app.route('/get_schedule_data', methods = ['GET'])
+def get_schedule_data():
+    connection = db_connection()
+    cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    cursor.execute('''
                         select
                             e.event_date,
                             e.event_name,
@@ -106,16 +149,17 @@ def schedule():
                             e.event_type_id = et.event_type_id
                         left join evt.event_participation ep on
                             e.event_id = ep.event_id
-                        group by 
+                        group by
                             e.event_id,
                             et.event_type_name
                         order by
                             e.event_date''')
-        data = cursor.fetchall()
+    rows = cursor.fetchall()
+    cursor.close()
+    connection.close()
 
-        return render_template('schedule.html', account = account, data = data)
-
-    return redirect(url_for('login'))
+    data = [{'event_date': row[0], 'event_name': row[1], 'event_disc': row[2], 'event_type': row[3], 'participation_count': row[4], 'event_id': row[5], 'user_id': session['id']} for row in rows]
+    return jsonify(data)
 
 @app.route('/logout')
 def logout():
@@ -127,7 +171,7 @@ def logout():
 
 @app.route('/create_event', methods = ['POST'])
 def create_event():
-
+    connection = db_connection()
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     event_date = request.form['event_date']
@@ -144,7 +188,7 @@ def create_event():
 
 @app.route('/current_event/<int:event_id_from_form>', methods = ['GET', 'POST'])
 def current_event(event_id_from_form):
-
+    connection = db_connection()
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     cursor.execute(''' 
@@ -166,27 +210,45 @@ def current_event(event_id_from_form):
 
     return render_template('current_event.html', data = data, username = username)
 
-@app.route('/subscribe_to_event', methods = ['GET', 'POST'])
+@app.route('/subscribe_to_event', methods = ['POST'])
 def subscribe_to_event():
-
+    connection = db_connection()
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    if request.method == "POST":
+    event_id = request.form.get('event_id_from_js')
+    user_id = request.form.get('user_id_from_js')
+    participation_status = 'subscribed'
 
-        data = request.form.get('subscribe_data_from_js')
+    cursor.execute('''
+                    insert into
+                        evt.event_participation as ep 
+                    (event_id, user_id, participation_status)
+                    values(%s, %s, %s)''', (event_id, user_id, participation_status, ))
+    connection.commit() 
+    cursor.close() 
+    connection.close()
 
-        print(data.split(','))
-        user_id, event_id = data.split(',')[0], data.split(',')[1]
-        print(user_id, event_id)
+    return redirect(url_for('schedule'))
 
-        cursor.execute('''
-                       insert into
-                            evt.event_participation as ep 
-                        (event_id, user_id)
-                        values(%s, %s)''', (user_id, event_id, ))
-        connection.commit() 
-        cursor.close() 
-        connection.close()
+@app.route('/unsubscribe_from_event', methods = ['POST'])
+def unsubscribe_from_event():
+    connection = db_connection()
+    cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    event_id = request.form.get('event_id_from_js')
+    user_id = request.form.get('user_id_from_js')
+
+    cursor.execute('''
+                    delete from 
+                        evt.event_participation
+                    where
+                        event_id = %s
+                    and 
+                        user_id = %s''',
+                    (event_id, user_id, ))
+    connection.commit() 
+    cursor.close() 
+    connection.close()
 
     return redirect(url_for('schedule'))
 

@@ -1,7 +1,7 @@
 function open_form() {
-    document.getElementById("schedule_form").style.display = "block"; 
+    $("#schedule_form").show(); // Показываем форму
 }
 
 function close_form() {
-    document.getElementById('schedule_form').style.display = "none";
+    $("#schedule_form").hide(); // Скрываем форму
 }
