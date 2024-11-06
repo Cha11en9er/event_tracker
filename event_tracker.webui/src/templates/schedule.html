@@ -13,19 +13,37 @@
 {% endblock %}
 
 {% block main %}
-<div class="schedule_main">
+<div class="form_popup" id="form_popup">
+    <form class="form_container" id="schedule_form" action="/create_event" method="POST">
+        <div class="form_data">
+            <div class="form_header">
+                <h1>Информация о ивенте</h1>
+                <button type="button" class="btn_cancel" onclick="close_form()">Закрыть</button>
+            </div>
 
-    <button class="create_event_btn" onclick="open_form()">Добавить ивент</button>
+            <input class="form_input" type="text" name="event_date" placeholder="Дата события">
+            <input class="form_input" type="text" name="event_name" placeholder="Название события">
+            <input class="form_input" type="text" name="event_discription" placeholder="Описание события">
+
+            <input type="submit" value="Добавить новый">
+        </div>
+    </form>
+</div>
+
+<div class="schedule_main" id="schedule_main">
 
     <table id="schedule_table">
+        
+        <caption class="table_head">Все ивенты <button class="create_event_btn" onclick="open_form()">Добавить ивент</button></caption>
+
         <thead>
             <tr>
-                <th>Дата</th>
-                <th>Название</th>
-                <th>Описание</th>
-                <th>Тип ивента</th>
-                <th>Кол-во пользователей</th>
-                <th>Кнопки</th>
+                <th class="col_data">Дата</th>
+                <th class="col_name">Название</th>
+                <th class="col_disc">Описание</th>
+                <th class="col_type">Тип ивента</th>
+                <th class="col_user">Кол-во пользователей</th>
+                <th class="col_btn">Кнопки</th>
             </tr>
         </thead>
 
@@ -36,154 +54,5 @@
         </tbody>
     </table>
 
-    <!-- <script>
-        function fetchData() {
-            $.ajax({
-                url: '/get_schedule_data',
-                type: 'GET',
-                success: function(data) {
-                    var display = $('#schedule_data');
-                    display.empty();
-                    data.forEach(function(item) {
-                        var row = $('<tr></tr>');
-                        row.append($('<td></td>').text(item.event_date));
-                        row.append($('<td></td>').text(item.event_name));
-                        row.append($('<td></td>').text(item.event_disc));
-                        row.append($('<td></td>').text(item.event_type));
-                        row.append($('<td></td>').text(item.participation_count));
-                        var sybscribe_button = $('<button></button>')
-                        .text('Подписаться')
-                        .click(function() {
-                            $.ajax({
-                                url: '/subscribe_to_event',
-                                type: 'POST',
-                                data: {
-                                    event_id_from_js: item.event_id,
-                                    user_id_from_js: item.user_id
-                                },
-                                success: function() {
-                                    alert('Вы подписались на ' + item.event_name);
-                                },
-                                error: function() {
-                                    alert('Вы уже являетесь участником ' + item.event_name);
-                                }
-                            });
-                        }); 
-                        var more_button = $('<button></button>')
-                        .text('Подробнее');
-
-                        var unsubscribe_button = $('<button></button>')
-                        .text('Отписаться')
-                        .click(function() {
-                            $.ajax({
-                                url: '/unsubscribe_from_event',
-                                type: 'POST',
-                                data: {
-                                    event_id_from_js: item.event_id,
-                                    user_id_from_js: item.user_id
-                                },
-                                success: function() {
-                                    alert('Вы отписались от ' + item.event_name)
-                                },
-                                error: function() {
-                                    alert('Вы не были подписаны на ' + item.event_name)
-                                }
-                            })
-                        })
-                        row.append($('<td></td>').append(sybscribe_button, more_button, unsubscribe_button));
-
-                        display.append(row);
-                    });
-                },
-                error: function() {
-                    $('#schedule_data').html('<tr><td colspan="4">Ошибка при загрузке данных.</td></tr>');
-                }
-            });
-        }
-
-        $(document).ready(function() {
-            fetchData();
-            setInterval(fetchData, 5000);
-        });
-    </script> -->
-    
-    <!-- <table class="schedule_table" id="schedule_table_id">
-        <thead class="table_title">
-            <th>таблица ивентов</th>
-            <th>
-                <button class="create_event_btn" onclick="open_form()">Добавить ивент</button>
-            </th>
-        </thead>
-
-        <tbody>
-            <tr class="table_name">
-                <td class="table_data">Дата</td>
-                <td class="table_name">Название</td>
-                <td class="table_discription">Описание</td>
-                <td class="table_count">Тип ивента</td>
-                <td class="user_count">Кол-во пользователей</td>
-                <td>Кнопки</td>
-            </tr>
-            {% for row in data %}
-            <tr>
-                <td>{{ row[0] }}</td>
-                <td>{{ row[1] }}</td>
-                <td>{{ row[2] }}</td>
-                <td>{{ row[3] }}</td>
-                <td>{{ row[4] }}</td>
-                <td>
-                    <a href="{{ url_for('current_event', event_id_from_form = row[5] ) }}">Подробнее</a>
-                    
-                    <form id="subscribe_form" method="POST">
-                        <input type="hidden" id="subscribe_data_from_form" name="subscribe_data_from_form" value="{{ row[5] }}, {{ account['user_id'] }}">
-                        <button id="subscribe_button" type="submit">Подписаться</button>
-                    </form>
-
-                    <a href="">Отписаться</a>
-                </td>
-
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table> -->
-
-    <!-- ############################ -->
-    <!-- <script>
-        function fetchData() {
-            $.ajax({
-                url: '/update_schedule',
-                type: 'GET',
-                success: function(response) {
-                    $('#value').text(response.value);
-                    $('#description').text(response.description);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Ошибка при получении данных:', error);
-                }
-            });
-        }
-
-        // Обновляем данные каждые 5 секунд
-        setInterval(fetchData, 5000);
-    </script> -->
-
-    <!-- ############################ -->
-</div>
-
-<div class="form_popup">
-    <form class="form_container" id="schedule_form" action="/create_event" method="POST">
-        <div class="form_data">
-            <div class="form_header">
-                <button type="button" class="btn cancel" onclick="close_form()">Закрыть</button>
-                <h1>Информация о ивенте</h1>
-            </div>
-
-            <input class="form_input" type="text" name="event_date" placeholder="Дата события">
-            <input class="form_input" type="text" name="event_name" placeholder="Название события">
-            <input class="form_input" type="text" name="event_discription" placeholder="Описание события">
-
-            <input type="submit" value="Добавить новый">
-        </div>
-    </form>
 </div>
 {% endblock %}
