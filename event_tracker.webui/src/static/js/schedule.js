@@ -6,7 +6,9 @@ function fetchData() {
             var display = $('#schedule_data');
             display.empty();
             data.forEach(function(item) {
-                var row = $('<tr></tr>');
+                var row = $('<tr class="table_row"></tr>').click(function() {
+                    window.location.href = '/current_event/' + item.event_id;
+                });
                 row.append($('<td></td>').text(item.event_date));
                 row.append($('<td></td>').text(item.event_name));
                 row.append($('<td></td>').text(item.event_disc));
@@ -30,8 +32,8 @@ function fetchData() {
                         }
                     });
                 }); 
-                var more_button = $('<button></button>')
-                .text('Подробнее');
+                // var more_button = $('<button></button>')
+                // .text('Подробнее');
 
                 var unsubscribe_button = $('<button></button>')
                 .text('Отписаться')
@@ -51,7 +53,7 @@ function fetchData() {
                         }
                     })
                 })
-                row.append($('<td></td>').append(sybscribe_button, more_button, unsubscribe_button));
+                row.append($('<td></td>').append(sybscribe_button, unsubscribe_button));
 
                 display.append(row);
             });

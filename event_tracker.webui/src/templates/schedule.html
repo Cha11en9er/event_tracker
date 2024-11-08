@@ -21,9 +21,16 @@
                 <button type="button" class="btn_cancel" onclick="close_form()">Закрыть</button>
             </div>
 
-            <input class="form_input" type="text" name="event_date" placeholder="Дата события">
+            <input class="form_input" type="date" name="event_date" placeholder="Дата события" id="event_date">
             <input class="form_input" type="text" name="event_name" placeholder="Название события">
             <input class="form_input" type="text" name="event_discription" placeholder="Описание события">
+            
+            <select name="event_type_selection" class="form_input">
+                <option value="" disabled selected>Выберите тип ивента</option>
+                {% for row in event_type %}
+                    <option value="{{ row[0] }}">{{ row[1] }}</option>
+                {% endfor %}
+            </select>
 
             <input type="submit" value="Добавить новый">
         </div>
@@ -48,7 +55,7 @@
         </thead>
 
         <tbody id="schedule_data">
-            <tr>
+            <tr class="table_row">
                 <td colspan="6">Закгрузка</td>
             </tr>
         </tbody>

@@ -14,15 +14,16 @@
 
 {% block main %}
 
-    <table class="schedule_table">
+<div class="event_main">
+    <table class="schedule_table" id="schedule_table">
+
+        <caption>{{ data[0][1] }} от {{ data[0][0] }}</caption>
+
         <thead class="table_title">
-            <th>{{ data[0][1] }} от {{ data[0][0] }}</th>
+            <th>участники</th>
         </thead>
 
         <tbody>
-            <tr class="table_name">
-               <td>участники</td> 
-            </tr>
             {% for row in data %}
                 <tr>
                     <td>{{ row[2] }}</td>
@@ -30,5 +31,6 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
 
 {% endblock %}

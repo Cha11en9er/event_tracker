@@ -5,10 +5,10 @@ import json
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'cairocoders-ednalan'
-db_password = 'OORCra23ppo)'
-db_host = "localhost"
-db_port = "5432"
+app.secret_key = '**'
+db_password = '**'
+db_host = "**"
+db_port = "**"
 
 def db_connection():
     connection = psycopg2.connect(database="EventTrackerDB", user="postgres", password = db_password, host = db_host, port = db_port) 
@@ -86,49 +86,29 @@ def login():
 
     return render_template('login.html')
 
-# @app.route('/schedule', methods=['GET', 'POST'])
-# def schedule():
-
-#     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
-#     if 'loggedin' in session:
-#         cursor.execute('SELECT * FROM evt.user WHERE user_id = %s', [session['id']])
-#         account = cursor.fetchone()
-
-#         cursor.execute('''
-#                         select
-#                             e.event_date,
-#                             e.event_name,
-#                             e.discription,
-#                             et.event_type_name,
-#                             count(ep.event_participation_id),
-#                             e.event_id
-#                         from
-#                             evt.event as e
-#                         inner join evt.event_type as et on
-#                             e.event_type_id = et.event_type_id
-#                         left join evt.event_participation ep on
-#                             e.event_id = ep.event_id
-#                         group by 
-#                             e.event_id,
-#                             et.event_type_name
-#                         order by
-#                             e.event_date''')
-#         data = cursor.fetchall()
-
-#         return render_template('schedule.html', account = account, data = data)
-
-#     return redirect(url_for('login'))
-
 @app.route('/schedule')
 def schedule():
     connection = db_connection()
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     if 'loggedin' in session:
-        cursor.execute('SELECT * FROM evt.user WHERE user_id = %s', [session['id']])
-        account = cursor.fetchone()
-        return render_template('schedule.html', account = account)
+        cursor.execute("""
+                        select
+                            *
+                        from
+                            evt.user
+                        where
+                            user_id = %s"""
+                       , [session['id']])
+        
+        data_account = cursor.fetchone()
+        cursor.execute("""
+                        select
+                            *
+                        from
+                            evt.event_type;""")
+        data_event_type = cursor.fetchall()
+        return render_template('schedule.html', account = data_account, event_type = data_event_type)
 
 @app.route('/get_schedule_data', methods = ['GET'])
 def get_schedule_data():
@@ -177,8 +157,20 @@ def create_event():
     event_date = request.form['event_date']
     event_name = request.form['event_name']
     event_discription = request.form['event_discription']
-    event_count = 0
-    cursor.execute('''INSERT INTO evt.event (event_date, event_name, discription) VALUES (%s, %s, %s)''', (event_date, event_name, event_discription)) 
+    event_type = request.form.get('event_type_selection')
+
+    event_date = event_date.split('-')
+    event_date = event_date[2] + '.' + event_date[1] + '.' + event_date[0]
+
+    cursor.execute("""
+                    insert into
+                        evt.event
+                    (event_id, event_date, event_name, discription, event_type_id)
+                    values (default,
+                    %s,
+                    %s,
+                    %s,
+                    %s)""", (event_date, event_name, event_discription, event_type))
 
     connection.commit() 
     cursor.close() 
@@ -221,7 +213,7 @@ def subscribe_to_event():
 
     cursor.execute('''
                     insert into
-                        evt.event_participation as ep 
+                        evt.event_participation
                     (event_id, user_id, participation_status)
                     values(%s, %s, %s)''', (event_id, user_id, participation_status, ))
     connection.commit() 
