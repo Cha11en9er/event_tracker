@@ -3,8 +3,11 @@ from flask_socketio import SocketIO, emit
 import psycopg2, psycopg2.extras
 import json 
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date, datetime
+# from babel.dates import format_date # библа для русификации месяцев
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 app.secret_key = '**'
 db_password = '**'
 db_host = "**"
@@ -110,6 +113,48 @@ def schedule():
         data_event_type = cursor.fetchall()
         return render_template('schedule.html', account = data_account, event_type = data_event_type)
 
+##########################################
+@socketio.on('request_schedule_data')
+def handle_request_schedule_data():
+    connection = db_connection()
+    cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    cursor.execute('''
+        SELECT
+            e.event_date,
+            e.event_name,
+            e.discription,
+            et.event_type_name,
+            COUNT(ep.event_participation_id),
+            e.event_id
+        FROM
+            evt.event AS e
+        INNER JOIN evt.event_type AS et ON
+            e.event_type_id = et.event_type_id
+        LEFT JOIN evt.event_participation ep ON
+            e.event_id = ep.event_id
+        GROUP BY
+            e.event_id,
+            et.event_type_name
+        ORDER BY
+            e.event_date
+    ''')
+    rows = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    for i in range(len(rows)):
+        datetime_date = datetime.strptime(str(rows[i][0]), '%Y-%m-%d')
+        formatted_date = datetime_date.strftime('%d %B %Y года')
+        formatted_date = formatted_date.lstrip('0')
+        rows[i][0] = formatted_date
+
+    data = [{'event_date': row[0], 'event_name': row[1], 'event_disc': row[2], 'event_type': row[3], 'participation_count': row[4], 'event_id': row[5], 'user_id': session['id']} for row in rows]
+    
+    emit('schedule_data', data)
+##########################################
+
+
 @app.route('/get_schedule_data', methods = ['GET'])
 def get_schedule_data():
     connection = db_connection()
@@ -137,6 +182,12 @@ def get_schedule_data():
     rows = cursor.fetchall()
     cursor.close()
     connection.close()
+
+    for i in range(len(rows)):
+        datetime_date = datetime.strptime(str(rows[i][0]), '%Y-%m-%d')
+        formatted_date = datetime_date.strftime('%d %B %Y года')
+        formatted_date = formatted_date.lstrip('0')
+        rows[i][0] = formatted_date
 
     data = [{'event_date': row[0], 'event_name': row[1], 'event_disc': row[2], 'event_type': row[3], 'participation_count': row[4], 'event_id': row[5], 'user_id': session['id']} for row in rows]
     return jsonify(data)
@@ -183,10 +234,12 @@ def current_event(event_id_from_form):
     connection = db_connection()
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
+    event_date = request.args.get('date')
+    # print(event_date)
+    event_name = request.args.get('name')
+
     cursor.execute(''' 
                 select
-                    e.event_date,
-                    e.event_name,
                     u.fullname
                 from
                     evt.event as e
@@ -196,11 +249,17 @@ def current_event(event_id_from_form):
                     ep.user_id = u.user_id 
                 where 
                    e.event_id = %s ''', (event_id_from_form, ))
-    data = cursor.fetchall()
-    
+    participant_data = cursor.fetchall()
+
     username = session['username']
 
-    return render_template('current_event.html', data = data, username = username)
+    static_data = {"username": username, "event_name": event_name, "event_date": event_date}
+
+    if not participant_data:
+        participant_data = [['Здесь пока нету участников. Вы можете стать первым']]
+        return render_template('current_event.html', data = participant_data, static_data = static_data)
+    
+    return render_template('current_event.html', data = participant_data, static_data = static_data)
 
 @app.route('/subscribe_to_event', methods = ['POST'])
 def subscribe_to_event():
@@ -245,4 +304,4 @@ def unsubscribe_from_event():
     return redirect(url_for('schedule'))
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    socketio.run(app)

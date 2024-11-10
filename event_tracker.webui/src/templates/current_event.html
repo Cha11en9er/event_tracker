@@ -1,12 +1,12 @@
 {% extends 'main.html' %}
 
-{% block title %} {{ data[0][1] }} {% endblock %}
+{% block title %} {{ static_data.event_name }} {% endblock %}
 
 {% block header %}
 <h1 class="header_title">Event tracker</h1>
 
 <div class="header_links">
-    <a class="btn_login" href="">Профиль пользователся {{ username }}</a>
+    <a class="btn_login" href="">Профиль пользователся {{ static_data.username }}</a>
     <a class="btn_registr" href="{{ url_for('schedule') }}">Ко всем ивентам</a>
 </div>
 
@@ -17,19 +17,20 @@
 <div class="event_main">
     <table class="schedule_table" id="schedule_table">
 
-        <caption>{{ data[0][1] }} от {{ data[0][0] }}</caption>
+        <caption>{{ static_data.event_name }} от {{ static_data.event_date }}</caption>
 
-        <thead class="table_title">
-            <th>участники</th>
-        </thead>
+            <thead class="table_title">
+                <th>участники</th>
+            </thead>
 
-        <tbody>
-            {% for row in data %}
-                <tr>
-                    <td>{{ row[2] }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
+            <tbody>
+                {% for row in data %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        
     </table>
 </div>
 
