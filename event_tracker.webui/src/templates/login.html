@@ -4,47 +4,28 @@
 
 {% block header %}
 <h1 class="header_title">Event tracker</h1>
-
-<div class="header_links">
-    <a class="btn_login" href="{{ url_for('register') }}">Зарегестрироваться</a>
-    <a class="btn_registr" href="{{ url_for('main') }}">В главное меню</a>
-</div>
 {% endblock %}
 
 {% block main %}
 <div class="login_main">
-    <h1 class="main_title">Вход</h1>
 
-    <div class="main_text">
-        Введите данные для входа в аккаунт
-    </div>
+    <h1 class="main_title">Вход</h1>
 
     <form action="{{ url_for('login') }}" method='POST'>
 
         <div class="login_part">
-            <label for="username">Логин</label>
             <input type="text" name="username" id="username" placeholder="Введите логин">
         </div>
 
         <div class="login_part">
-            <label for="username">Пароль</label>
             <input type="text" name="password" id="password" placeholder="Введите пароль">
         </div>
 
         <input type="submit" value="Войти">
-
-        {% with messages = get_flashed_messages()  %}
-        {% if messages %}
-        {% for message in messages %}
-        <div>
-        {{ message }}
-        </div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
     </form>
 
-    <p>Нету аккаунта? <a href="{{ url_for('register') }}"></a>Зарегестрируйтесь!</p>
-
+    <p class="login_reg">Нету аккаунта?</p>
+    <input type="button" value="Зарегистрируйтесь!" onclick="location.href='{{ url_for('register') }}'">
+    <input type="button" value="На главную" onclick="location.href='{{ url_for('main') }}'">
 </div>
 {% endblock %}

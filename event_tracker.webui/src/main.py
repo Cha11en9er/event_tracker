@@ -8,10 +8,10 @@ from datetime import date, datetime
 
 app = Flask(__name__)
 socketio = SocketIO(app)
-app.secret_key = '**'
-db_password = '**'
-db_host = "**"
-db_port = "**"
+app.secret_key = 'cairocoders-ednalan'
+db_password = 'OORCra23ppo)'
+db_host = "localhost"
+db_port = "5432"
 
 def db_connection():
     connection = psycopg2.connect(database="EventTrackerDB", user="postgres", password = db_password, host = db_host, port = db_port) 
@@ -72,6 +72,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        print(username, password)
         cursor.execute('SELECT * FROM evt.user WHERE username = %s', (username,))
         account = cursor.fetchone()
 

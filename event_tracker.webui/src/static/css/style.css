@@ -8,7 +8,7 @@ body {
     margin: 0;
 }
 
-h1, h2, h3, h4, h5, h6, p {
+h1, h2, h3, h4, h5, h6, p, a {
     margin: 0;
 }
 
@@ -16,70 +16,113 @@ h1, h2, h3, h4, h5, h6, p {
 
 .main_header {
     background-color: #1382aa;
-    display: flex;
     padding: 20px;
-    justify-content: space-between;
-}
-
-.header_links {
-    display: flex;
-    align-items: center; 
-    justify-content: space-around;
-}
-
-.btn_login, .btn_registr {
-    color: black;
-    text-decoration: none;
-    padding-right: 50px;
-}
-
-.main_main {
-    height: 880px;
-    display: flex;
-    align-items: center; 
-    justify-content: center;
-    flex-direction: column;
-}
-
-.main_title {
-    margin-bottom: 20px;
-}
-
-.main_btns {
-    display: flex;
-    flex-direction: column;
     text-align: center;
 }
 
-.main_btn_login, .main_btn_registr {
-    margin-top: 20px;
-    padding: 10px 10px;
-    border: 1px solid black;
-    text-decoration: none;
-    color: #060f71;
-    background-color: #149cba;
-    border-radius: 15%;
+.main_main {
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
 }
+
+.main_content {
+    display: flex;
+}
+
+.main_left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.main_right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
 
 /* main end */
 
+/* login start */
+
+.login_part {
+    width: 100%;
+    margin: 15px 0;
+}
+
+#username, #password, #fullname, #email {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #000;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.login_reg  {
+    padding: 15px 0;
+}
+
+/* .login_reg_link {
+    text-decoration: none;
+    color: #fff;
+    background-color: #1382aa;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    padding: 10px 0;
+} */
+
+/* login end */
 
 /* register start */
 
 .register_main {
     display: flex;
     flex-direction: column;
-    border: solid 1px black;
     text-align: center;
     padding: 50px 50px;
 }
 
 .registration_part {
     display: flex;
-    margin-top: 20px;
+    margin: 15px 0;
 }
 
 /* register end */
+
+/* flash-message start */
+
+.flash-messages {
+    position: fixed;
+    top: 150px; /* Расположение сверху */
+    left: 50%;
+    transform: translateX(-50%); /* Центрирование по горизонтали */
+    z-index: 1000; /* Чтобы окно было поверх других элементов */
+    width: 90%; /* Ширина окна */
+    max-width: 400px; /* Максимальная ширина */
+}
+
+.flash-message {
+    background-color: #f8d7da; /* Цвет фона */
+    color: #721c24; /* Цвет текста */
+    padding: 15px;
+    border: 1px solid #f5c6cb; /* Граница */
+    border-radius: 5px;
+    margin-bottom: 10px; /* Отступ между сообщениями */
+    display: none; /* Скрыто по умолчанию */
+    justify-content: center;
+    opacity: 1; /* Начальная непрозрачность */
+    transition: opacity 0.5s ease; /* Плавный переход для исчезновения */
+}
+
+/* flash-message start */
 
 /* schedule start */
 
@@ -210,8 +253,8 @@ h1, h2, h3, h4, h5, h6, p {
     outline: none;
 }
 
-input[type="submit"] {
-    background-color: #4CAF50;
+input[type="submit"], input[type="button"] {
+    background-color: #1382aa;
     color: white;
     border: none;
     padding: 10px;
@@ -221,8 +264,8 @@ input[type="submit"] {
     transition: background-color 0.3s;
 }
 
-input[type="submit"]:hover {
-    background-color: #45a049;
+input[type="submit"]:hover, input[type="button"]:hover {
+    background-color: #111c8d;
 }
 
 /* schedule_form end*/
