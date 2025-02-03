@@ -1,20 +1,28 @@
 from flask import Flask, request, session, redirect, url_for, render_template, flash, jsonify
 from flask_socketio import SocketIO, emit
 import psycopg2, psycopg2.extras
-import json 
+import json
+from dotenv import load_dotenv
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date, datetime
 # from babel.dates import format_date # библа для русификации месяцев
 
+load_dotenv()
+
 app = Flask(__name__)
 socketio = SocketIO(app)
-app.secret_key = '**'
-db_password = ''
-db_host = ""
-db_port = ""
+app.secret_key = 'cairocoders-ednalan'
+
+env_host=os.getenv('DB_HOST')
+env_port=os.getenv('DB_PORT')
+env_database=os.getenv('DB_NAME')
+env_user=os.getenv('DB_USER')
+env_password=os.getenv('DB_PASSWORD')
+print(env_host)
 
 def db_connection():
-    connection = psycopg2.connect(database="EventTrackerDB", user="postgres", password = db_password, host = db_host, port = db_port) 
+    connection = psycopg2.connect(host = env_host, port = env_port, database = env_database, user = env_user, password = env_password) 
     return connection
 
 
@@ -72,7 +80,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        print(username, password)
+        # print(username, password)
         cursor.execute('SELECT * FROM evt.user WHERE username = %s', (username,))
         account = cursor.fetchone()
 
@@ -120,78 +128,78 @@ def handle_request_schedule_data():
     connection = db_connection()
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    cursor.execute('''
-        SELECT
-            e.event_date,
-            e.event_name,
-            e.discription,
-            et.event_type_name,
-            COUNT(ep.event_participation_id),
-            e.event_id
-        FROM
-            evt.event AS e
-        INNER JOIN evt.event_type AS et ON
-            e.event_type_id = et.event_type_id
-        LEFT JOIN evt.event_participation ep ON
-            e.event_id = ep.event_id
-        GROUP BY
-            e.event_id,
-            et.event_type_name
-        ORDER BY
-            e.event_date
-    ''')
-    rows = cursor.fetchall()
-    cursor.close()
-    connection.close()
+    if 'loggedin' in session:
+        cursor.execute('''
+            SELECT
+                e.event_date,
+                e.event_name,
+                e.discription,
+                et.event_type_name,
+                COUNT(ep.event_participation_id),
+                e.event_id
+            FROM
+                evt.event AS e
+            INNER JOIN evt.event_type AS et ON
+                e.event_type_id = et.event_type_id
+            LEFT JOIN evt.event_participation ep ON
+                e.event_id = ep.event_id
+            GROUP BY
+                e.event_id,
+                et.event_type_name
+            ORDER BY
+                e.event_date
+        ''')
+        rows = cursor.fetchall()
+        cursor.close()
+        connection.close()
 
-    for i in range(len(rows)):
-        datetime_date = datetime.strptime(str(rows[i][0]), '%Y-%m-%d')
-        formatted_date = datetime_date.strftime('%d %B %Y года')
-        formatted_date = formatted_date.lstrip('0')
-        rows[i][0] = formatted_date
+        for i in range(len(rows)):
+            datetime_date = datetime.strptime(str(rows[i][0]), '%Y-%m-%d')
+            formatted_date = datetime_date.strftime('%d %B %Y года')
+            formatted_date = formatted_date.lstrip('0')
+            rows[i][0] = formatted_date
 
-    data = [{'event_date': row[0], 'event_name': row[1], 'event_disc': row[2], 'event_type': row[3], 'participation_count': row[4], 'event_id': row[5], 'user_id': session['id']} for row in rows]
-    
-    emit('schedule_data', data)
+        data = [{'event_date': row[0], 'event_name': row[1], 'event_disc': row[2], 'event_type': row[3], 'participation_count': row[4], 'event_id': row[5], 'user_id': session['id']} for row in rows]
+        
+        emit('schedule_data', data)
 ##########################################
 
+# @app.route('/get_schedule_data', methods = ['GET'])
+# def get_schedule_data():
+#     connection = db_connection()
+#     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-@app.route('/get_schedule_data', methods = ['GET'])
-def get_schedule_data():
-    connection = db_connection()
-    cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+#     cursor.execute('''
+#                         select
+#                             e.event_date,
+#                             e.event_name,
+#                             e.discription,
+#                             et.event_type_name,
+#                             count(ep.event_participation_id),
+#                             e.event_id
+#                         from
+#                             evt.event as e
+#                         inner join evt.event_type as et on
+#                             e.event_type_id = et.event_type_id
+#                         left join evt.event_participation ep on
+#                             e.event_id = ep.event_id
+#                         group by
+#                             e.event_id,
+#                             et.event_type_name
+#                         order by
+#                             e.event_date''')
+#     rows = cursor.fetchall()
+#     cursor.close()
+#     connection.close()
 
-    cursor.execute('''
-                        select
-                            e.event_date,
-                            e.event_name,
-                            e.discription,
-                            et.event_type_name,
-                            count(ep.event_participation_id),
-                            e.event_id
-                        from
-                            evt.event as e
-                        inner join evt.event_type as et on
-                            e.event_type_id = et.event_type_id
-                        left join evt.event_participation ep on
-                            e.event_id = ep.event_id
-                        group by
-                            e.event_id,
-                            et.event_type_name
-                        order by
-                            e.event_date''')
-    rows = cursor.fetchall()
-    cursor.close()
-    connection.close()
+#     for i in range(len(rows)):
+#         datetime_date = datetime.strptime(str(rows[i][0]), '%Y-%m-%d')
+#         formatted_date = datetime_date.strftime('%d %B %Y года')
+#         formatted_date = formatted_date.lstrip('0')
+#         rows[i][0] = formatted_date
 
-    for i in range(len(rows)):
-        datetime_date = datetime.strptime(str(rows[i][0]), '%Y-%m-%d')
-        formatted_date = datetime_date.strftime('%d %B %Y года')
-        formatted_date = formatted_date.lstrip('0')
-        rows[i][0] = formatted_date
-
-    data = [{'event_date': row[0], 'event_name': row[1], 'event_disc': row[2], 'event_type': row[3], 'participation_count': row[4], 'event_id': row[5], 'user_id': session['id']} for row in rows]
-    return jsonify(data)
+#     data = [{'event_date': row[0], 'event_name': row[1], 'event_disc': row[2], 'event_type': row[3], 'participation_count': row[4], 'event_id': row[5], 'user_id': session['id']} for row in rows]
+#     return jsonify(data)
 
 @app.route('/logout')
 def logout():

@@ -1,0 +1,35 @@
+{% extends 'main.html' %}
+
+{% block title %} Страница регистрации {% endblock %}
+
+{% block main %}
+<div class="register_main">
+    <h1 class="main_title">Регистрация</h1>
+
+    <div class="main_text">
+        <p>Введите данные для регистрации</p>
+    </div>
+
+
+    <form action="{{ url_for('auth.register') }}" method="POST" autocomplete="off">
+        <div class="registration_part">
+            <input type="text" name="fullname" id="fullname" placeholder="Введите ваше имя"/>
+        </div>
+        <div class="registration_part">
+            <input type="text" name="username" id="username" placeholder="Введите ваш логин"/>
+        </div>  
+        <div class="registration_part">
+            <input type="text" name="email" id="email" placeholder="Введите вашу почту"/>
+        </div>  
+        <div class="registration_part">
+            <input type="text" name="password" id="password" placeholder="Введите ваш пароль"/>
+        </div> 
+        
+        <input type="submit" value="Зарегестрироваться">
+    </form>
+
+    <p class="login_reg">Есть аккаунт?</p>
+    <input type="button" value="Войдите!" onclick="location.href='{{ url_for('auth.login') }}'">
+    <input type="button" value="На главную" onclick="location.href='{{ url_for('auth.main') }}'">
+</div>
+{% endblock %}

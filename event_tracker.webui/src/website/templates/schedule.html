@@ -1,0 +1,73 @@
+{% extends 'main.html' %}
+
+{% block title %} Главная {% endblock %}
+
+{% block header %}
+<div class="header_content">
+    <div class="header_smth">
+        <p>Тех. поддержка</p>
+    </div>
+
+    <h1 class="header_title">Event tracker</h1>
+
+    <div class="header_links">
+        <a class="btn_login" href="{{ url_for('user_page.user_page', user_id_from_form =  account[0]) }}">Профиль</a>
+        <a class="btn_registr" href="{{ url_for('auth.logout') }}">Выйти</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block main %}
+<div class="form_popup" id="form_popup">
+    <form class="form_container" id="schedule_form" action="/create_event" method="POST">
+        <div class="form_data">
+            <div class="form_header">
+                <h1>Информация о ивенте</h1>
+                <button type="button" class="btn_cancel" onclick="close_form()">Закрыть</button>
+            </div>
+
+            <input class="form_input" type="date" name="event_date" placeholder="Дата события" id="event_date">
+            <input class="form_input" type="time" name="event_time" placeholder="Время события" id="event_time">
+            <input class="form_input" type="text" name="event_name" placeholder="Название события">
+            <input class="form_input" type="text" name="event_discription" placeholder="Описание события">
+            
+            <select name="event_type_selection" class="form_input">
+                <option value="" disabled selected>Выберите тип ивента</option>
+                {% for row in event_type %}
+                    <option value="{{ row[0] }}">{{ row[1] }}</option>
+                {% endfor %}
+            </select>
+
+            <input type="submit" value="Добавить новый">
+        </div>
+    </form>
+</div>
+
+<div class="schedule_main" id="schedule_main">
+
+    <table id="schedule_table">
+        
+        <caption class="table_head">Все ивенты <button class="create_event_btn" onclick="open_form()">Добавить ивент</button></caption>
+
+        <thead>
+            <tr>
+                <th class="col_data">Дата</th>
+                <th class="col_name">Название</th>
+                <th class="col_disc">Описание</th>
+                <th class="col_type">Тип ивента</th>
+                <th class="col_user">Кол-во пользователей</th>
+                <th class="col_btn">Кнопки</th>
+            </tr>
+        </thead>
+
+        <tbody id="schedule_data">
+            <tr class="table_row">
+                <td colspan="6">Закгрузка</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="pagination"></div>
+    
+</div>
+{% endblock %}

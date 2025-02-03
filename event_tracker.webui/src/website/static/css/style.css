@@ -1,0 +1,305 @@
+.blur {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6, p, a {
+    margin: 0;
+}
+
+/* main start */
+
+.main_header {
+    background-color: #1382aa;
+    padding: 20px;
+    text-align: center;
+}
+
+.main_main {
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.main_content {
+    display: flex;
+}
+
+.main_left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.main_right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* main end */
+
+/* login start */
+
+.login_part {
+    width: 100%;
+    margin: 15px 0;
+}
+
+#username, #password, #fullname, #email {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #000;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.login_reg  {
+    padding: 15px 0;
+}
+
+/* .login_reg_link {
+    text-decoration: none;
+    color: #fff;
+    background-color: #1382aa;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    padding: 10px 0;
+} */
+
+/* login end */
+
+/* register start */
+
+.register_main {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 50px 50px;
+}
+
+.registration_part {
+    display: flex;
+    margin: 15px 0;
+}
+
+/* register end */
+
+/* flash-message start */
+
+.flash-messages {
+    position: fixed;
+    top: 150px; /* Расположение сверху */
+    left: 50%;
+    transform: translateX(-50%); /* Центрирование по горизонтали */
+    z-index: 1000; /* Чтобы окно было поверх других элементов */
+    width: 90%; /* Ширина окна */
+    max-width: 400px; /* Максимальная ширина */
+}
+
+.flash-message {
+    background-color: #f8d7da; /* Цвет фона */
+    color: #721c24; /* Цвет текста */
+    padding: 15px;
+    border: 1px solid #f5c6cb; /* Граница */
+    border-radius: 5px;
+    margin-bottom: 10px; /* Отступ между сообщениями */
+    display: none; /* Скрыто по умолчанию */
+    justify-content: center;
+    opacity: 1; /* Начальная непрозрачность */
+    transition: opacity 0.5s ease; /* Плавный переход для исчезновения */
+}
+
+/* flash-message start */
+
+/* schedule start */
+
+.header_content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.header_links {
+    display: flex;
+    flex-direction: row;
+    place-items: center
+}
+
+.btn_login, .btn_registr {
+    color: whitesmoke;
+    padding: 10px 10px;
+    background-color: black;
+    text-decoration: none;
+    margin-right: 20px;
+    border-radius: 10px 10px 10px 10px;
+}
+
+.btn_login:hover, btn_registr:hover {
+    background: #1d49aa;
+}
+
+.schedule_main, .event_main {
+    margin: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 1300px; /* Задаем ширину контейнера */
+    height: 60vh; /* Задаем высоту контейнера */
+}
+
+.table_head {
+    padding: 10px 10px;
+}
+
+.create_event_btn {
+    padding: 5px 5px;
+    color: #fff;
+    background-color: #149cba;
+    border: none;
+    border-radius: 12px;
+}
+
+.create_event_btn:hover {
+    background: #1d49aa;
+  }
+
+#schedule_table {
+    border-collapse: collapse;
+    table-layout: fixed; /* мега важная штука. мы задаём размер таблицы, а не контент внутри */
+    width: 100%;
+}
+
+#schedule_table th, 
+#schedule_table td {
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
+    padding: 10px;
+    text-align: center; 
+}
+
+.table_row {
+    cursor: pointer;
+}
+
+.table_row:hover {
+    background-color: #149cba;
+}
+
+.col_data {
+    width: 20%;
+}
+
+.col_name {
+    width: 25%;
+}
+
+.col_disc{
+    width: 30%;
+}
+
+.disc_row {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 150px;
+}
+
+.col_type {
+    width: 10%;
+}
+
+.col_user {
+    width: 10%;
+}
+
+.col_btn {
+    width: 10%;
+}
+
+/* schedule_form start */
+
+.form_popup{
+    position: fixed; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    padding: 20px;
+}
+
+.form_popup.show {
+    display: block;
+    opacity: 1;
+}
+
+.form_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn_cancel {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer; 
+    transition: background-color 0.3s;
+}
+
+.btn_cancel:hover {
+    background-color: #d32f2f;
+}
+
+.form_input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.form_input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+input[type="submit"], input[type="button"] {
+    background-color: #1382aa;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover, input[type="button"]:hover {
+    background-color: #111c8d;
+}
+
+/* schedule_form end*/
+
+
+/* schedule end */
