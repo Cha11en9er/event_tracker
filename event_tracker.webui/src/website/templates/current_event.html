@@ -3,13 +3,18 @@
 {% block title %} {{ static_data.event_name }} {% endblock %}
 
 {% block header %}
-<h1 class="header_title">Event tracker</h1>
+<div class="header_content">
+    <div class="header_smth">
+        <p>Тех. поддержка</p>
+    </div>
 
-<div class="header_links">
-    <a class="btn_login" href="">Профиль пользователся {{ static_data.username }}</a>
-    <a class="btn_registr" href="{{ url_for('schedule_menu.schedule') }}">Ко всем ивентам</a>
+    <h1 class="header_title">Event tracker</h1>
+
+    <div class="header_links">
+        <a class="btn_registr" href="{{ url_for('schedule_menu.schedule') }}">Ко всем ивентам</a>
+        <a class="btn_registr" href="{{ url_for('auth.logout') }}">Выйти</a>
+    </div>
 </div>
-
 {% endblock %}
 
 {% block main %}
@@ -21,12 +26,24 @@
 
             <thead class="table_title">
                 <th>участники</th>
+                {% if static_data.user_role == 'Admin' %}
+                    <form action="{{ url_for('delete_event.delete_event', event_id_from_form = static_data.event_id ) }}" method = "POST">
+                        <input type="hidden" name="event_id_from_form" value="{{ static_data.event_id }}">
+                        <button type="submit">
+                            Удалить
+                        </button>
+                    </form>
+                {% endif %}
             </thead>
 
             <tbody>
                 {% for row in data %}
                     <tr>
-                        <td>{{ row[0] }}</td>
+                        <td>
+                            <a href="">
+                                {{ row[0] }}
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

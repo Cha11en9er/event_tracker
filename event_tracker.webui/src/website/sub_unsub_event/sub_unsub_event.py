@@ -10,13 +10,12 @@ def subscribe_to_event():
 
     event_id = request.form.get('event_id_from_js')
     user_id = request.form.get('user_id_from_js')
-    participation_status = 'subscribed'
 
     cursor.execute('''
                     insert into
                         evt.event_participation
-                    (event_id, user_id, participation_status)
-                    values(%s, %s, %s)''', (event_id, user_id, participation_status, ))
+                    (event_id, user_id)
+                    values(%s, %s)''', (event_id, user_id, ))
     connection.commit() 
     cursor.close() 
     connection.close()

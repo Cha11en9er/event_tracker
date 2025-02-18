@@ -9,7 +9,6 @@ def create_event():
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     event_date = request.form['event_date']
-    event_time = request.form['event_time']
     event_name = request.form['event_name']
     event_discription = request.form['event_discription']
     event_type = request.form.get('event_type_selection')
@@ -17,18 +16,11 @@ def create_event():
     event_date = event_date.split('-')
     event_date = event_date[2] + '.' + event_date[1] + '.' + event_date[0]
 
-    print(event_date, event_time, event_discription)
-
     cursor.execute("""
                     insert into
                         evt.event
-                    (event_id, event_date, event_name, discription, event_type_id, event_time)
-                    values (default,
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s)""", (event_date, event_name, event_discription, event_type, event_time))
+                    (event_id, event_date, event_name, discription, event_type_id)
+                    values (default, %s, %s, %s, %s)""", (event_date, event_name, event_discription, event_type ))
 
     connection.commit() 
     cursor.close() 

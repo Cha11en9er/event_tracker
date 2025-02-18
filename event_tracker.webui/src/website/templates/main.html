@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block custom_css %} {% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
     <title>{% block title %} Главная страница {% endblock %}</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
@@ -28,25 +31,21 @@
 
     <div class="main_header">
         {% block header %}
-            <h1 class="header_title">Event tracker</h1>
         {% endblock %}
     </div>
 
     <div class="main_main">
         {% block main %}
-            <div class="main_content">
-                <div class="main_left">
+            <div class="d-flex justify-content-center align-items-center vh-100 bg-light main_content">
                     <h1 class="main_title">Event tracker</h1>
 
-                    <div class="main_text">
-                        <p>Приложение для учёта вне рабочих активностей</p>
-                    </div>
-                </div>
+                    <h3>Приложение для учёта внерабочих активностей с возможностью уведомлений в телеграм</h>
 
-                <div class="main_right">
-                    <input type="button" value="Вход" onclick="location.href='{{ url_for('auth.login') }}'">
-                    <input type="button" value="Регистрация" onclick="location.href='{{ url_for('auth.register') }}'">
-                </div>
+                    <div class="main_buttons">
+                        <input class="main_button" type="button" value="Вход" onclick="location.href='{{ url_for('auth.login') }}'">
+                        <input class="main_button" type="button" value="Регистрация" onclick="location.href='{{ url_for('auth.register') }}'">
+                    </div>
+
             </div>
         {% endblock %}
     </div>

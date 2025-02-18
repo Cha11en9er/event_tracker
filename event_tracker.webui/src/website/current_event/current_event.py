@@ -14,23 +14,26 @@ def current_event(event_id_from_form):
 
     cursor.execute(''' 
                 select
-                    u.fullname
+                    u.fullname,
+                    u.user_id
                 from
                     evt.event as e
-                inner join evt.event_participation as ep on
+                left join evt.event_participation as ep on
                     e.event_id = ep.event_id
-                inner join evt.user as u on
+                left join evt.user as u on
                     ep.user_id = u.user_id 
                 where 
                    e.event_id = %s ''', (event_id_from_form, ))
     participant_data = cursor.fetchall()
 
     username = session['username']
+    role = session['role']
+    event_id = event_id_from_form
 
-    static_data = {"username": username, "event_name": event_name, "event_date": event_date}
+    user_data = {"username": username, "event_name": event_name, "event_date": event_date, "user_role" : role, "event_id" : event_id}
 
     if not participant_data:
         participant_data = [['Здесь пока нету участников. Вы можете стать первым']]
-        return render_template('current_event.html', data = participant_data, static_data = static_data)
+        return render_template('current_event.html', data = participant_data, static_data = user_data)
     
-    return render_template('current_event.html', data = participant_data, static_data = static_data)
+    return render_template('current_event.html', data = participant_data, static_data = user_data)

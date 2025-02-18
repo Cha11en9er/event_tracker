@@ -1,0 +1,15 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    height: 50px; /* Увеличиваем высоту строк */
+}
+
+.pagination {
+    margin: 20px 0;
+}

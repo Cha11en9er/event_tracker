@@ -3,79 +3,38 @@
     transition: filter 0.3s ease;
 }
 
-body {
-    padding: 0;
-    margin: 0;
-}
-
-h1, h2, h3, h4, h5, h6, p, a {
-    margin: 0;
-}
-
 /* main start */
 
-.main_header {
-    background-color: #1382aa;
-    padding: 20px;
-    text-align: center;
-}
-
-.main_main {
-    position: absolute; 
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-}
-
 .main_content {
-    display: flex;
+    flex-direction: column;
 }
 
-.main_left {
+.main_buttons {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
-    align-items: center;
-    margin-right: 20px;
 }
 
-.main_right {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.main_button {
+    background-color: #1382aa;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 200px;
+    height: 50px;
+    transition: background-color 0.3s;
+    margin-right: 100px;
+}
+
+.main_button:last-child {
+    margin-right: 0;
 }
 
 /* main end */
 
 /* login start */
 
-.login_part {
-    width: 100%;
-    margin: 15px 0;
-}
-
-#username, #password, #fullname, #email {
-    width: 100%;
-    box-sizing: border-box;
-    border: 1px solid #000;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.login_reg  {
-    padding: 15px 0;
-}
-
-/* .login_reg_link {
-    text-decoration: none;
-    color: #fff;
-    background-color: #1382aa;
-    border: none;
-    border-radius: 5px;
-    width: 100%;
-    padding: 10px 0;
-} */
 
 /* login end */
 
@@ -149,17 +108,9 @@ h1, h2, h3, h4, h5, h6, p, a {
     background: #1d49aa;
 }
 
-.schedule_main, .event_main {
-    margin: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 1300px; /* Задаем ширину контейнера */
-    height: 60vh; /* Задаем высоту контейнера */
-}
-
-.table_head {
-    padding: 10px 10px;
+.table_header {
+    margin: 0 0;
+    border-bottom: none;
 }
 
 .create_event_btn {
@@ -174,18 +125,12 @@ h1, h2, h3, h4, h5, h6, p, a {
     background: #1d49aa;
   }
 
-#schedule_table {
-    border-collapse: collapse;
-    table-layout: fixed; /* мега важная штука. мы задаём размер таблицы, а не контент внутри */
-    width: 100%;
+.table th, .table td {
+    vertical-align: middle;
 }
 
-#schedule_table th, 
-#schedule_table td {
-    border-top: 2px solid #000;
-    border-bottom: 2px solid #000;
-    padding: 10px;
-    text-align: center; 
+.table tbody tr {
+    height: 50px; /* Увеличиваем высоту строк */
 }
 
 .table_row {
@@ -196,35 +141,11 @@ h1, h2, h3, h4, h5, h6, p, a {
     background-color: #149cba;
 }
 
-.col_data {
-    width: 20%;
-}
-
-.col_name {
-    width: 25%;
-}
-
-.col_disc{
-    width: 30%;
-}
-
 .disc_row {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     width: 150px;
-}
-
-.col_type {
-    width: 10%;
-}
-
-.col_user {
-    width: 10%;
-}
-
-.col_btn {
-    width: 10%;
 }
 
 /* schedule_form start */
@@ -284,7 +205,7 @@ h1, h2, h3, h4, h5, h6, p, a {
     outline: none;
 }
 
-input[type="submit"], input[type="button"] {
+/* input[type="submit"], input[type="button"] {
     background-color: #1382aa;
     color: white;
     border: none;
@@ -293,7 +214,7 @@ input[type="submit"], input[type="button"] {
     cursor: pointer;
     width: 100%;
     transition: background-color 0.3s;
-}
+} */
 
 input[type="submit"]:hover, input[type="button"]:hover {
     background-color: #111c8d;
@@ -303,3 +224,16 @@ input[type="submit"]:hover, input[type="button"]:hover {
 
 
 /* schedule end */
+
+/* user_page start */
+
+.user_page_main {
+    display: flex;
+}
+
+.user_page_avatar {
+    width: 200px;
+    height: 200px;
+}
+
+/* user_page end */

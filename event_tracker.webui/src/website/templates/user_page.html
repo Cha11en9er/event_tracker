@@ -1,0 +1,52 @@
+{% extends 'main.html' %}
+
+{% block custom_css %} <link rel="stylesheet" href="{{ url_for('static', filename='css/user_page.css') }}"> {% endblock %}
+
+{% block title %} Профиль {% endblock %}
+
+{% block header %}
+<div class="header_content">
+    <div class="header_smth">
+        <p>Тех. поддержка</p>
+    </div>
+
+    <h1 class="header_title">Event tracker</h1>
+
+    <div class="header_links">
+        <a class="btn_registr" href="{{ url_for('schedule_menu.schedule') }}">Ко всем ивентам</a>
+        <a class="btn_registr" href="{{ url_for('auth.logout') }}">Выйти</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <div class="user_page_main">
+
+        <div class="col-md-4">
+            <div class="user_page_left">
+                <img class="user_page_avatar" src="..\static\uploads\gle.png" alt="аватар">
+                <p>{{ user_data[0]['fullname'] }}</p>
+                <p>{{ user_data[0]['email'] }}</p>
+                <p>{{ user_data[0]['telegram_id'] }}</p>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="user_page_right">
+                <p>Участие в ивентах</p>
+                <ul>
+                    {% for event in user_data[0]['event_name'] %}
+                        <li>
+                            {{ event }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+

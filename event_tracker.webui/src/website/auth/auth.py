@@ -16,8 +16,16 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        print(username, password)
-        cursor.execute('SELECT * FROM evt.user WHERE username = %s', (username,))
+        cursor.execute('''SELECT 
+                            u.user_id,
+                            u.fullname,
+                            u.username,
+                            u.password,
+                            r.role_discription
+                          FROM evt.user as u 
+                          INNER JOIN evt.role AS r
+                          ON u.user_id = r.user_id
+                          WHERE username = %s''', (username,))
         account = cursor.fetchone()
 
         if account:
@@ -26,12 +34,15 @@ def login():
                 session['loggedin'] = True
                 session['id'] = account[0]
                 session['username'] = account[2]
+                session['fullname'] = account[1]
+                session['role'] = account[4]
+                flash('Вы вошли в систему!')
                 return redirect(url_for('schedule_menu.schedule'))
             else:
                 flash('Неверный логин или пароль')
         else:
             flash('Неверный логин или пароль')
-
+    
     return render_template('login.html')
 
 @auth_blueprint.route('/register', methods=['GET', 'POST'])
@@ -44,8 +55,6 @@ def register():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-
-        print(fullname, username, password, email)
 
         _hashed_password = generate_password_hash(password)
 
@@ -68,10 +77,19 @@ def register():
 
             cursor.execute('SELECT * FROM evt.user WHERE username = %s', (username,))
             account_data = cursor.fetchone()
+
+            cursor.execute("INSERT INTO evt.role (user_id, role_discription) VALUES (%s, %s)", (account_data[0], 'Viewer'))
+            connection.commit()
+
+            cursor.execute('SELECT role_discription FROM evt.role WHERE user_id = %s', (account_data[0],))
+            role_data = cursor.fetchone()
+
             session['loggedin'] = True
             session['id'] = account_data[0]
             session['username'] = account_data[2]
-            
+            session['fullname'] = account_data[1]
+            session['role'] = role_data[0]
+
             return redirect(url_for('schedule_menu.schedule'))
 
     return render_template('register.html')
