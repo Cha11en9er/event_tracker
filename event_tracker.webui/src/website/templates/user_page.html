@@ -20,29 +20,78 @@
 {% endblock %}
 
 {% block main %}
-
 <div class="container">
     <div class="user_page_main">
 
-        <div class="col-md-4">
-            <div class="user_page_left">
-                <img class="user_page_avatar" src="..\static\uploads\gle.png" alt="аватар">
-                <p>{{ user_data[0]['fullname'] }}</p>
-                <p>{{ user_data[0]['email'] }}</p>
-                <p>{{ user_data[0]['telegram_id'] }}</p>
-            </div>
-        </div>
+        <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
 
-        <div class="col-md-8">
-            <div class="user_page_right">
-                <p>Участие в ивентах</p>
-                <ul>
-                    {% for event in user_data[0]['event_name'] %}
-                        <li>
-                            {{ event }}
-                        </li>
-                    {% endfor %}
-                </ul>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            <img class="user_page_avatar" src="..\static\uploads\gle.png" alt="аватар">
+                            <div class="mt-3">
+                                <p>{{ user_data[0]['fullname'] }}</p>
+                                <button class="btn btn-primary">Добавить в друзья</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Full Name</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user_data[0]['fullname'] }}
+                            </div>
+                            <hr>
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Почта</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user_data[0]['email'] }}
+                            </div>
+                            <hr>
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Телеграм id</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user_data[0]['telegram_id'] }}
+                            </div>
+                            <hr>
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Пароль</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                ***
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                  <a class="btn btn-info " target="__blank" href="*">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h1>Участие</h1>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            {% for event in user_data[0]['event_name'] %}
+                            <div class="col-sm-12">
+                                {{ event }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -50,3 +99,24 @@
 </div>
 {% endblock %}
 
+<!-- <div class="col-md-4">
+    <div class="user_page_left">
+        <img class="user_page_avatar" src="..\static\uploads\gle.png" alt="аватар">
+        <p>{{ user_data[0]['fullname'] }}</p>
+        <p>{{ user_data[0]['email'] }}</p>
+        <p>{{ user_data[0]['telegram_id'] }}</p>
+    </div>
+</div>
+
+<div class="col-md-8">
+    <div class="user_page_right">
+        <p>Участие в ивентах</p>
+        <ul>
+            {% for event in user_data[0]['event_name'] %}
+                <li>
+                    {{ event }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div> -->

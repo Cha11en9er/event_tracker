@@ -1,9 +1,32 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
 .blur {
     filter: blur(5px);
     transition: filter 0.3s ease;
 }
 
 /* main start */
+
+.main_main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.container {
+    min-height: 600px;
+    width: 100%;
+}
 
 .main_content {
     flex-direction: column;
@@ -32,11 +55,6 @@
 }
 
 /* main end */
-
-/* login start */
-
-
-/* login end */
 
 /* register start */
 
@@ -129,12 +147,9 @@
     vertical-align: middle;
 }
 
-.table tbody tr {
-    height: 50px; /* Увеличиваем высоту строк */
-}
-
 .table_row {
     cursor: pointer;
+    height: 70px;
 }
 
 .table_row:hover {
@@ -142,10 +157,10 @@
 }
 
 .disc_row {
-    white-space: nowrap;
+    max-width: 300px;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 150px;
+    white-space: nowrap;
 }
 
 /* schedule_form start */

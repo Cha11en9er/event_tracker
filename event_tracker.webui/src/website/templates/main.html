@@ -16,6 +16,7 @@
     <script src="{{ url_for('static', filename='js/schedule.js') }}"></script>
     <script src="{{ url_for('static', filename='js/flash-message.js') }}"></script>
 </head>
+
 <body>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -34,7 +35,7 @@
         {% endblock %}
     </div>
 
-    <div class="main_main">
+    <div class="main_main ">
         {% block main %}
             <div class="d-flex justify-content-center align-items-center vh-100 bg-light main_content">
                     <h1 class="main_title">Event tracker</h1>

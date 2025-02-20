@@ -46,7 +46,14 @@
 <div id="schedule_main">
 
     <div class="container mt-5">
-        <p class="table_header border text-center">Все ивенты <button class="create_event_btn" onclick="open_form()">Добавить ивент</button></p>
+        <p class="table_header border text-center">
+            Все ивенты 
+            <button class="create_event_btn" onclick="open_form()">Добавить ивент</button>
+            <form action="/search_event" method="POST">
+                <input type="text" class="search-input" placeholder="Поиск" name="search_info">
+                <input type="submit" value="Найти">
+            </form>
+        </p>
         <div class="row">
             <div class="col-12">
                 <table class="table table-striped table-bordered" id="schedule_table">

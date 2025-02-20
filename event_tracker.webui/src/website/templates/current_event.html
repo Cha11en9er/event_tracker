@@ -19,8 +19,42 @@
 
 {% block main %}
 
-<div class="event_main">
-    <table class="schedule_table" id="schedule_table">
+<div class="container">
+    <div class="event_main">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>{{ static_data.event_name }}</h3>
+                        <h4>{{ static_data.event_date }}</h4>
+                        <h4>{{ static_data.event_time }}</h4>
+                        <h4>Тип ивента</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5>{{ static_data.event_disc }}</h5>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        {% for row in data %}
+                            <a href="">
+                                {{ row[0] }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- <table class="schedule_table" id="schedule_table">
 
         <caption>{{ static_data.event_name }} от {{ static_data.event_date }}</caption>
 
@@ -48,7 +82,7 @@
                 {% endfor %}
             </tbody>
         
-    </table>
-</div>
+    </table> -->
+<!-- </div> -->
 
 {% endblock %}
