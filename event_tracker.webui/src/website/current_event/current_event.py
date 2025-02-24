@@ -1,17 +1,41 @@
 from flask import render_template, Blueprint, session, request
 import psycopg2, psycopg2.extras
+import re
 
 current_event_blueprint = Blueprint('current_event', __name__)
+
+# def make_links(event_disc):
+#     
+
+#     # Функция для замены URL-адресов на HTML-теги
+#     def replace_with_link(match):
+#         url = match.group(0)
+#         return f'<a href="{url}" target="_blank">{url}</a>'
+
+#     # Замена всех URL-адресов в тексте
+#     return url_pattern.sub(replace_with_link, event_disc)
 
 @current_event_blueprint.route('/current_event/<int:event_id_from_form>', methods = ['GET', 'POST'])
 def current_event(event_id_from_form):
     connection = current_event_blueprint.db_connection()
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
+    def add_hyperlinks(text):
+        url_pattern = re.compile(r'(https?://\S+)')
+
+        def replace_with_link(match):
+            url = match.group(0)
+            return f"<a href='{url}' target='_blank' rel='noopener noreferrer'>{url}</a>"
+
+        return url_pattern.sub(replace_with_link, text)
+
     event_date = request.args.get('date')
     event_name = request.args.get('name')
     event_disc = request.args.get('disc')   
     event_time = request.args.get('time')
+
+    event_disc = add_hyperlinks(event_disc)
+
 
     cursor.execute('''
                 select

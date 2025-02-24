@@ -77,8 +77,18 @@ def get_schedule_data():
             else:
                 rows[i][6] = 'Время не указано'
 
-
-
-        data = [{'event_date': row[0], 'event_name': row[1], 'event_disc': row[2], 'event_type': row[3], 'participation_count': row[4], 'event_id': row[5], 'user_id': session['id'], 'user_participation': user_participation, 'event_time': row[6]} for row in rows]
+        data = [
+                    {
+                        'event_date': row[0],
+                        'event_name': row[1], 
+                        'event_disc': row[2], 
+                        'event_type': row[3], 
+                        'participation_count': row[4], 
+                        'event_id': row[5], 
+                        'user_id': session['id'], 
+                        'user_participation': user_participation, 
+                        'event_time': row[6]
+                    } for row in rows
+                ]
 
         return jsonify(data)  # Возвращаем данные в формате JSON

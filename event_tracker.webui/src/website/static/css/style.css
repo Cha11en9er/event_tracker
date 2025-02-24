@@ -1,3 +1,5 @@
+/*  ----------------------------  */
+
 html, body {
     height: 100%;
     margin: 0;
@@ -220,23 +222,11 @@ body {
     outline: none;
 }
 
-/* input[type="submit"], input[type="button"] {
-    background-color: #1382aa;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s;
-} */
-
 input[type="submit"]:hover, input[type="button"]:hover {
     background-color: #111c8d;
 }
 
 /* schedule_form end*/
-
 
 /* schedule end */
 
@@ -252,3 +242,56 @@ input[type="submit"]:hover, input[type="button"]:hover {
 }
 
 /* user_page end */
+
+/* current_event start */
+
+.event-main {
+    margin-top: 20px;
+}
+.card {
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.card-body {
+    padding: 20px;
+}
+.event-title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+.event-date, .event-time, .event-type {
+    font-size: 1.25rem;
+    color: #555;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+.event-date {
+    color: #007bff;
+}
+.event-time {
+    color: #28a745;
+}
+.event-type {
+    color: #dc3545;
+}
+.event-description {
+    font-size: 1rem;
+    color: #333;
+}
+.event-links a {
+    display: block;
+    margin-bottom: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+.event-links a:hover {
+    text-decoration: underline;
+}
+
+/* current_event end */
