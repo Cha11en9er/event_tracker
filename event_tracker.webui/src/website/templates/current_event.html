@@ -3,14 +3,11 @@
 {% block title %} {{ static_data.event_name }} {% endblock %}
 
 {% block header %}
-<div class="header_content">
-    <div class="header_smth">
-        <p>Тех. поддержка</p>
-    </div>
+<div class="header text-center">
 
     <h1 class="header_title">Event tracker</h1>
 
-    <div class="header_links">
+    <div class="btn-group" role="group">
         <a class="btn_registr" href="{{ url_for('schedule_menu.schedule') }}">Ко всем ивентам</a>
         <a class="btn_registr" href="{{ url_for('auth.logout') }}">Выйти</a>
     </div>
@@ -19,34 +16,83 @@
 
 {% block main %}
 
-<div class="container">
-    <div class="event-main">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h3 class="event-title">{{ static_data.event_name }}</h3>
-                        <h4 class="event-date">{{ static_data.event_date }}</h4>
-                        <h4 class="event-time">{{ static_data.event_time }}</h4>
-                        <h4 class="event-type">Тип ивента</h4>
-                    </div>
+<div class="modal fade" id="event_popup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Выберите время оповещения</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="notificationTime" id="5min" value="15">
+                    <label class="form-check-label" for="5min">15 минут</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="notificationTime" id="15min" value="30">
+                    <label class="form-check-label" for="15min">30 минут</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="notificationTime" id="30min" value="60">
+                    <label class="form-check-label" for="30min">1 час</label>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="saveNotification"
+                data-telegram-id="{{ static_data.user_telegram_id }}" 
+                data-user-id="{{ static_data.user_id }}">
+                    Сохранить
+                </button>
+                
+                <div id="telegramMessage" class="alert" style="display: none; margin-top: 10px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
-            <div class="col-md-9">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="event-description">{{ static_data.event_disc|safe }}</h5>
-                    </div>
-                </div>
+{{ static_data.telegram_id }}
 
-                <div class="card">
-                    <div class="card-body event-links">
-                        {% for row in data %}
-                            <a href="{{ row[1] }}">{{ row[0] }}</a>
-                        {% endfor %}
-                    </div>
+<div class="container" id="current_event_main">
+    <div class="main-content">
+        <div class="row">
+            <div class="col-md-12 event-details">
+                <span>{{ static_data.event_date }}</span> |
+                <span>{{ static_data.event_time }}</span> |
+                <span>Тип события</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center event-title">
+                {{ static_data.event_name }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="text-center">
+                    <h5 class="event-description">{{ static_data.event_disc|safe }}</h5>
                 </div>
+            </div>
+        </div>
+        <div class="row participant">
+            <div class="list-group-item event-links">
+                {% for row in data %}
+                    {% if row|length > 1 and row[1] is not none %}
+                        <a href="{{ url_for('user_page.user_page', user_id_from_form=row[1]) }}">{{ row[0] }}</a>
+                    {% else %}
+                        <span>{{ row[0] }}</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row footer">
+            <div class="col-md-6">
+                <button type="button" class="btn btn-outline-secondary">Спланировать</button>
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-outline-secondary" id="openModalButton">
+                    Оповещать
+                </button>
             </div>
         </div>
     </div>

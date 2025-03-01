@@ -3,18 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% block custom_css %} {% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 
     <title>{% block title %} Главная страница {% endblock %}</title>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
-
-    <script src="{{ url_for('static', filename='js/subscribe.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/schedule_form.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/schedule.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/flash-message.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </head>
 
 <body>
@@ -51,5 +47,11 @@
         {% endblock %}
     </div>
 
+    <script src="{{ url_for('static', filename='js/subscribe.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/schedule_form.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/schedule.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flash-message.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/edit_profile.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/current_event_popup.js') }}"></script>
 </body>
 </html>

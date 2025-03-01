@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Красивая таблица</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 70%;
+            margin: auto;
+            font-family: Arial, sans-serif;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #ffc107;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <tr>
+        <th colspan="6">Все инвенты</th>
+    </tr>
+    <tr>
+        <td></td>
+        <th>Поиск</th>
+        <th>Найти</th>
+        <th>Описание</th>
+        <th>Дата</th>
+        <th>Количество участников</th>
+    </tr>
+    <tr>
+        <td><input type="checkbox" class="check"></td>
+        <td><button class="btn">Добавить инвент</button></td>
+        <td>1212</td>
+        <td>12</td>
+        <td>12 Декабрь 1212 года</td>
+        <td>хакатон</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" class="check"></td>
+        <td><button class="btn">Добавить инвент</button></td>
+        <td>митинг</td>
+        <td>разбор сделанных задач</td>
+        <td>1 Январь 2001 года</td>
+        <td>митинг</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" class="check"></td>
+        <td><button class="btn">Добавить инвент</button></td>
+        <td>собрание</td>
+        <td>собрание мидлов для распределения...</td>
+        <td>1 Январь 2002 года</td>
+        <td>собрание</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" class="check"></td>
+        <td><button class="btn">Добавить инвент</button></td>
+        <td>форум</td>
+        <td>форум в здании</td>
+        <td>1 Январь 2002 года</td>
+        <td>форум</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" class="check"></td>
+        <td><button class="btn">Добавить инвент</button></td>
+        <td>собрание</td>
+        <td>собрание мидлов для распределения...</td>
+        <td>1 Январь 2002 года</td>
+        <td>собрание</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" class="check"></td>
+        <td><button class="btn">Добавить инвент</button></td>
+        <td>форум</td>
+        <td>форум в здании</td>
+        <td>1 Январь 2002 года</td>
+        <td>форум</td>
+        <td>0</td>
+    </tr>
+</table>
+
+</body>
+</html>

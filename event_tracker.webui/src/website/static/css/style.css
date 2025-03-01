@@ -1,5 +1,3 @@
-/*  ----------------------------  */
-
 html, body {
     height: 100%;
     margin: 0;
@@ -23,7 +21,6 @@ body {
     justify-content: center;
     align-items: center;
 }
-
 
 .container {
     min-height: 600px;
@@ -58,18 +55,98 @@ body {
 
 /* main end */
 
-/* register start */
+/* login start */
 
-.register_main {
+.left_login_content {
     display: flex;
     flex-direction: column;
-    text-align: center;
-    padding: 50px 50px;
+    justify-content: center;
+    align-items: center;
+    background-color: #178e9e;
 }
 
-.registration_part {
+.login_reg_title {
+    font-size: 20px;
+}
+
+.login_reg_button {
+    width: 160px;
+    border-radius: 20px;
+    border: none;
+}
+
+/* Стили для страницы логина */
+.login-page .card-group > .card:first-child {
+    flex: 0 0 40%; /* 40% width for the left card */
+}
+
+.login-page .card-group > .card:last-child {
+    flex: 0 0 60%; /* 60% width for the right card */
+}
+  
+
+.right_login_content {
     display: flex;
-    margin: 15px 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #1382aa;
+}
+
+.left_login_input {
+    border: none;   
+    background-color: #d7caca;
+}
+
+.left_login_button {
+    width: 160px;
+    border-radius: 20px;
+    border: none;
+    background-color: #1382aa;
+    color: white;
+}
+
+/* login end */
+
+/* register start */
+
+/* Стили для страницы регистрации */
+.register-page .card-group > .card:first-child {
+    flex: 0 0 60%; /* 60% width for the left card */
+}
+
+.register-page .card-group > .card:last-child {
+    flex: 0 0 40%; /* 40% width for the right card */
+}
+
+.left_registr_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #1382aa;
+}
+
+.right_registr_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #178e9e;
+    color: white;
+}
+.right_login_button {
+    width: 160px;
+    border-radius: 20px;
+    border: none;
+}
+
+.right_reg_button {
+    width: 160px;
+    border-radius: 20px;
+    border: none;
+    background-color: #1382aa;
+    color: white;
 }
 
 /* register end */
@@ -245,53 +322,34 @@ input[type="submit"]:hover, input[type="button"]:hover {
 
 /* current_event start */
 
-.event-main {
+.header {
+    background-color: #e0f7fa;
+    padding: 10px;
+    border-radius: 5px;
+}
+.main-content {
     margin-top: 20px;
 }
-.card {
-    margin-bottom: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.card-body {
-    padding: 20px;
-}
 .event-title {
-    font-size: 1.75rem;
+    color: #ff5722;
+    font-size: 24px;
+}
+.event-details {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.event-details span {
     font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 10px;
 }
-.event-date, .event-time, .event-type {
-    font-size: 1.25rem;
-    color: #555;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
+.participant {
+    margin-top: 20px;
+    text-align: center;
 }
-.event-date {
-    color: #007bff;
-}
-.event-time {
-    color: #28a745;
-}
-.event-type {
-    color: #dc3545;
-}
-.event-description {
-    font-size: 1rem;
-    color: #333;
-}
-.event-links a {
-    display: block;
-    margin-bottom: 10px;
-    color: #007bff;
-    text-decoration: none;
-}
-.event-links a:hover {
-    text-decoration: underline;
+.footer {
+    margin-top: 20px;
+    text-align: center;
 }
 
 /* current_event end */

@@ -4,17 +4,6 @@ import re
 
 current_event_blueprint = Blueprint('current_event', __name__)
 
-# def make_links(event_disc):
-#     
-
-#     # Функция для замены URL-адресов на HTML-теги
-#     def replace_with_link(match):
-#         url = match.group(0)
-#         return f'<a href="{url}" target="_blank">{url}</a>'
-
-#     # Замена всех URL-адресов в тексте
-#     return url_pattern.sub(replace_with_link, event_disc)
-
 @current_event_blueprint.route('/current_event/<int:event_id_from_form>', methods = ['GET', 'POST'])
 def current_event(event_id_from_form):
     connection = current_event_blueprint.db_connection()
@@ -36,7 +25,6 @@ def current_event(event_id_from_form):
 
     event_disc = add_hyperlinks(event_disc)
 
-
     cursor.execute('''
                 select
                     u.fullname,
@@ -55,10 +43,10 @@ def current_event(event_id_from_form):
     role = session['role']
     event_id = event_id_from_form
 
-    user_data = {"username": username, "event_name": event_name, "event_date": event_date, "user_role" : role, "event_id" : event_id, "event_disc": event_disc, "event_time": event_time}
+    user_data = {"username": username, "event_name": event_name, "event_date": event_date, "user_role" : role, "event_id" : event_id, "event_disc": event_disc, "event_time": event_time, "user_telegram_id": session["telegram_id"], "user_id": session["id"]}
 
-    if not participant_data:
+    if not participant_data or (len(participant_data) == 1 and participant_data[0] == [None, None]):
         participant_data = [['Здесь пока нету участников. Вы можете стать первым']]
-        return render_template('current_event.html', data = participant_data, static_data = user_data)
+        # return render_template('current_event.html', data = participant_data, static_data = user_data)
     
     return render_template('current_event.html', data = participant_data, static_data = user_data)

@@ -21,7 +21,8 @@ def login():
                             u.fullname,
                             u.username,
                             u.password,
-                            r.role_discription
+                            r.role_discription,
+                            u.telegram_id
                           FROM evt.user as u 
                           INNER JOIN evt.role AS r
                           ON u.user_id = r.user_id
@@ -36,6 +37,7 @@ def login():
                 session['username'] = account[2]
                 session['fullname'] = account[1]
                 session['role'] = account[4]
+                session['telegram_id'] = account[5]
                 flash('Вы вошли в систему!')
                 return redirect(url_for('schedule_menu.schedule'))
             else:
@@ -89,6 +91,7 @@ def register():
             session['username'] = account_data[2]
             session['fullname'] = account_data[1]
             session['role'] = role_data[0]
+            session['telegram_id'] = account_data[5]
 
             return redirect(url_for('schedule_menu.schedule'))
 
@@ -99,5 +102,4 @@ def logout():
    session.pop('loggedin', None)
    session.pop('id', None)
    session.pop('username', None)
-   # Redirect to login page
    return redirect(url_for('auth.main'))

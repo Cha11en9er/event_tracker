@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Tracker</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .header {
+            background-color: #e0f7fa;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .main-content {
+            margin-top: 20px;
+        }
+        .event-title {
+            color: #ff5722;
+            font-size: 24px;
+        }
+        .event-details {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .event-details span {
+            font-weight: bold;
+        }
+        .participant {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header text-center">
+            <h4>Event tracker</h4>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary mr-4">В главное меню</button>
+                <button type="button" class="btn btn-outline-primary mr-4">Подписаться</button>
+                <button type="button" class="btn btn-outline-primary">Удалить</button>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="row">
+                <div class="col-md-12 text-center event-title">
+                    Название события
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 event-details">
+                    <span>Дата события</span> |
+                    <span>Время события</span> |
+                    <span>Тип события</span>
+                </div>
+            </div>
+            <div class="row participant">
+                <div class="col-md-12">
+                    <div class="list-group-item">
+                        Участник события: Базальт пустой | Создателю
+                    </div>
+                </div>
+            </div>
+            <div class="row footer">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-outline-secondary">Спланировать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

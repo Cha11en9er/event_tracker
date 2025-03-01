@@ -31,9 +31,6 @@ def user_page(user_id_from_form):
         connection.close()
 
         user_raw_data = [dict(zip(columns, row)) for row in rows]
-        
-        print('#######################')
-        print(rows)
 
         user_data = {}
         for item in user_raw_data:
@@ -51,10 +48,11 @@ def user_page(user_id_from_form):
                 }
 
             user_data[(fullname, email, telegram_id)]['event_name'].add(event_name)
+            
 
         user_data = list(user_data.values())
+        user_data[0]['session_user_id'] = session['id']
+        user_data[0]['page_user_id'] = user_id_from_form
 
-
-        # print(user_data)
 
     return render_template('user_page.html', user_data = user_data)

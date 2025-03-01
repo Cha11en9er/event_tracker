@@ -11,6 +11,8 @@ from .create_event.create_event import create_event_blueprint
 from .user_page.user_page import user_page_blueprint
 from .delete_event.delete_event import delete_event_blueprint
 from .search_event.search_event import search_event_blueprint
+from .edit_profile.edit_profile import edit_profile_blueprint
+from .send_notif.send_notif import send_notif_blueprint
 
 load_dotenv()
 
@@ -36,6 +38,8 @@ def create_app():
     app.register_blueprint(user_page_blueprint, url_prefix='/')
     app.register_blueprint(delete_event_blueprint, url_prefix='/')
     app.register_blueprint(search_event_blueprint, url_prefix='/')
+    app.register_blueprint(edit_profile_blueprint, url_prefix='/')
+    app.register_blueprint(send_notif_blueprint, url_prefix='/')
 
     auth_blueprint.db_connection = db_connection
     schedule_menu_blueprint.db_connection = db_connection
@@ -45,5 +49,7 @@ def create_app():
     user_page_blueprint.db_connection = db_connection
     delete_event_blueprint.db_connection = db_connection
     search_event_blueprint.db_connection = db_connection
+    edit_profile_blueprint.db_connection = db_connection
+    send_notif_blueprint.db_connection = db_connection
 
     return app

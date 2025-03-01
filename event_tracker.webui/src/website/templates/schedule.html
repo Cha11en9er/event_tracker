@@ -4,14 +4,16 @@
 
 {% block header %}
 <div class="header_content">
-    <div class="header_smth">
-        <p>Тех. поддержка</p>
-    </div>
-
     <h1 class="header_title">Event tracker</h1>
 
+    <nav aria-label="breadcrumb" class="main-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page">Расписание</li>
+        </ol>
+    </nav>
+
     <div class="header_links">
-        <a class="btn_login" href="{{ url_for('user_page.user_page', user_id_from_form =  account[0] ) }}">Профиль</a>
+        <a class="btn_login" href="{{ url_for('user_page.user_page', user_id_from_form=account[0] ) }}">Профиль</a>
         <a class="btn_registr" href="{{ url_for('auth.logout') }}">Выйти</a>
     </div>
 </div>

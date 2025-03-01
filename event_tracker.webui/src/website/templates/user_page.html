@@ -45,38 +45,45 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-3">
-                                <h6 class="mb-0">Full Name</h6>
+                                <h6 class="mb-0">Имя и фамилия</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-9 text-secondary" id="fullname">
                                 {{ user_data[0]['fullname'] }}
                             </div>
                             <hr>
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Почта</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-9 text-secondary" id="email">
                                 {{ user_data[0]['email'] }}
                             </div>
                             <hr>
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Телеграм id</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-9 text-secondary" id="telegram_id">
                                 {{ user_data[0]['telegram_id'] }}
                             </div>
                             <hr>
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Пароль</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-9 text-secondary" id="password">
                                 ***
                             </div>
+
+                            <div class="col-sm-9 text-secondary" id="user_id" style="display:none;">
+                                {{ user_data[0]['session_user_id'] }}
+                            </div>
+                            
                             <hr>
+                            {% if user_data[0]['session_user_id'] == user_data[0]['page_user_id'] %}
                             <div class="row">
                                 <div class="col-sm-12">
-                                  <a class="btn btn-info " target="__blank" href="*">Edit</a>
+                                  <a class="btn btn-info" target="__blank" id="editButton">Редактировать</a>
                                 </div>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -98,25 +105,3 @@
     </div>
 </div>
 {% endblock %}
-
-<!-- <div class="col-md-4">
-    <div class="user_page_left">
-        <img class="user_page_avatar" src="..\static\uploads\gle.png" alt="аватар">
-        <p>{{ user_data[0]['fullname'] }}</p>
-        <p>{{ user_data[0]['email'] }}</p>
-        <p>{{ user_data[0]['telegram_id'] }}</p>
-    </div>
-</div>
-
-<div class="col-md-8">
-    <div class="user_page_right">
-        <p>Участие в ивентах</p>
-        <ul>
-            {% for event in user_data[0]['event_name'] %}
-                <li>
-                    {{ event }}
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-</div> -->

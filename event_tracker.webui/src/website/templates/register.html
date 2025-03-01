@@ -1,35 +1,51 @@
 {% extends 'main.html' %}
 
-{% block title %} Страница регистрации {% endblock %}
+{% block title %} Регистрация {% endblock %}
+
+<nav aria-label="breadcrumb" class="main-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('auth.main') }}">Главная</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Регистрация</li>
+    </ol>
+</nav>
 
 {% block main %}
-<div class="register_main">
-    <h1 class="main_title">Регистрация</h1>
+<div class="container register-page">
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="col-md-8">
+            <div class="card-group">
+                <div class="card text-white flex-grow-1">
+                    <div class="left_registr_content card-body text-center">
+                        <h1 class="main_title">Регистрация</h1>
+                        <p class="text-muted">Введите данные</p>
+                        <form class="text-center" action="{{ url_for('auth.register') }}" method="POST" autocomplete="off">
+                            <div class="input-group mb-3">
+                                <input class="left_login_input" type="text" name="fullname" id="fullname" placeholder="Имя и фимилия"/>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input class="left_login_input" type="text" name="username" id="username" placeholder="Логин"/>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input class="left_login_input" type="text" name="email" id="email" placeholder="Почта"/>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input class="left_login_input" type="password" name="password" id="password" placeholder="Пароль"/>
+                            </div>
+                            <input class="right_reg_button" type="submit" value="Зарегестрироваться">
+                        </form>
+                    </div>
+                </div>
 
-    <div class="main_text">
-        <p>Введите данные для регистрации</p>
-    </div>
-
-
-    <form action="{{ url_for('auth.register') }}" method="POST" autocomplete="off">
-        <div class="registration_part">
-            <input type="text" name="fullname" id="fullname" placeholder="Введите ваше имя и фамилию"/>
+                <div class="card flex-grow-1">
+                    <div class="card-body right_registr_content">
+                        <p class="registr_reg">Есть аккаунт?</p>
+                        <input class="right_login_button" type="button" value="Войдите!" onclick="location.href='{{ url_for('auth.login') }}'">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="registration_part">
-            <input type="text" name="username" id="username" placeholder="Введите ваш логин"/>
-        </div>  
-        <div class="registration_part">
-            <input type="text" name="email" id="email" placeholder="Введите вашу почту"/>
-        </div>  
-        <div class="registration_part">
-            <input type="text" name="password" id="password" placeholder="Введите ваш пароль"/>
-        </div> 
-        
-        <input type="submit" value="Зарегестрироваться">
-    </form>
-
-    <p class="login_reg">Есть аккаунт?</p>
-    <input type="button" value="Войдите!" onclick="location.href='{{ url_for('auth.login') }}'">
-    <input type="button" value="На главную" onclick="location.href='{{ url_for('auth.main') }}'">
+    </div>
 </div>
+
+
 {% endblock %}
