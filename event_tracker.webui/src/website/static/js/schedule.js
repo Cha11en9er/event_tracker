@@ -52,7 +52,7 @@ function renderTable() {
 
     paginatedData.forEach(function(item) {
         var row = $('<tr class="table_row"></tr>').click(function() {
-            window.location.href = '/current_event/' + item.event_id + '?date=' + item.event_date + '&time=' + item.event_time + '&name=' + encodeURIComponent(item.event_name) + '&disc=' + encodeURIComponent(item.event_disc);
+            window.location.href = '/current_event/' + item.event_id + '?date=' + item.event_date + '&datetime=' + item.datetime + '&time=' + item.event_time + '&name=' + encodeURIComponent(item.event_name) + '&disc=' + encodeURIComponent(item.event_disc);
         });
         row.append($('<td></td>').text(item.event_name));
         row.append($('<td class="disc_row"></td>').text(item.event_disc));
@@ -118,11 +118,15 @@ function renderPagination() {
 
     var totalPages = Math.ceil(allData.length / itemsPerPage);
 
+    var paginationGroup = $('<div class="btn-group"></div>');
+
     for (var i = 1; i <= totalPages; i++) {
-        var pageButton = $('<button></button>').text(i).click(function() {
+        var pageButton = $('<button type="button" class="btn btn-outline-secondary"></button>').text(i).click(function() {
             currentPage = parseInt($(this).text());
             renderTable(); // Обновляем таблицу при смене страницы
         });
-        pagination.append(pageButton);
+        paginationGroup.append(pageButton);
     }
+
+    pagination.append(paginationGroup);
 }

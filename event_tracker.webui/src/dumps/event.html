@@ -1,84 +1,36 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Tracker</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .header {
-            background-color: #e0f7fa;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .main-content {
-            margin-top: 20px;
-        }
-        .event-title {
-            color: #ff5722;
-            font-size: 24px;
-        }
-        .event-details {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-        .event-details span {
-            font-weight: bold;
-        }
-        .participant {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header text-center">
-            <h4>Event tracker</h4>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-outline-primary mr-4">В главное меню</button>
-                <button type="button" class="btn btn-outline-primary mr-4">Подписаться</button>
-                <button type="button" class="btn btn-outline-primary">Удалить</button>
+<!-- <div class="modal fade" id="event_popup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Выберите время оповещения</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        </div>
-        <div class="main-content">
-            <div class="row">
-                <div class="col-md-12 text-center event-title">
-                    Название события
+            <div class="modal-body">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="notificationTime" id="5min" value="15">
+                    <label class="form-check-label" for="5min">15 минут</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="notificationTime" id="15min" value="30">
+                    <label class="form-check-label" for="15min">30 минут</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="notificationTime" id="30min" value="60">
+                    <label class="form-check-label" for="30min">1 час</label>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12 event-details">
-                    <span>Дата события</span> |
-                    <span>Время события</span> |
-                    <span>Тип события</span>
-                </div>
-            </div>
-            <div class="row participant">
-                <div class="col-md-12">
-                    <div class="list-group-item">
-                        Участник события: Базальт пустой | Создателю
-                    </div>
-                </div>
-            </div>
-            <div class="row footer">
-                <div class="col-md-12">
-                    <button type="button" class="btn btn-outline-secondary">Спланировать</button>
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="saveNotification"
+                data-telegram-id="{{ static_data.user_telegram_id }}" 
+                data-user-id="{{ static_data.user_id }}"
+                data-event-datetime="{{ static_data.event_datetime }}"
+                data-event-name="{{ static_data.event_name }}">
+                    Сохранить
+                </button>
+                
+                <div id="telegramMessage" class="alert" style="display: none; margin-top: 10px;"></div>
             </div>
         </div>
     </div>
-
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+</div> -->

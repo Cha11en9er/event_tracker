@@ -1,20 +1,57 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 import requests
 from dotenv import load_dotenv
 import os
 import psycopg2, psycopg2.extras
 from datetime import datetime, timedelta, timezone
+from dateutil import parser
 
 send_notif_blueprint = Blueprint('send_notif', __name__)
 
 @send_notif_blueprint.route('/send_notif', methods=['POST'])
-def take_data_from_js():
-    data = request.json
-    telegram_id = data.get('telegramId')
-    user_id = data.get('userId')
-    selected_time = data.get('selectedTime')
+def send_notif():
+    notif_event_date = request.form['notif_event_date']
+    notif_event_name = request.form['notif_event_name']
+    notif_user_id = request.form['notif_user_id']
+    notif_user_tg_id = request.form['notif_user_tg_id']
+    notif_time = int(request.form['notif_time'])
 
-    print(f"Received data - Telegram ID: {telegram_id}, User ID: {user_id}, Selected Time: {selected_time}")
+    print(notif_event_date, notif_event_name, notif_user_id, notif_user_tg_id, notif_time)
+
+    def write_notif_record(telegram_id, user_id, selected_time, event_datetime, counted_time, event_name):
+        connection = send_notif_blueprint.db_connection()
+        cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        cursor.execute("""
+                        INSERT INTO
+                            evt.notification
+                        (notification_id, user_id, user_telegram_id, event_date, notif_user_time, notif_time, notif_status, event_name)
+                        VALUES (default, %s, %s, %s, %s, %s::timestamp without time zone, %s, %s)
+                        """, (user_id, telegram_id, event_datetime, selected_time, counted_time, 'Active', event_name))
+        
+        connection.commit() 
+        cursor.close() 
+        connection.close()
+
+    # write_notif_record(notif_user_id, notif_user_tg_id, )
+
+    datetime_event_date = datetime.fromisoformat(notif_event_date)
+    counted_event_time = datetime_event_date - timedelta(minutes=notif_time)
+
+    print("Исходное время:", datetime_event_date)
+    print("Новое время:", counted_event_time)
+
+    return jsonify({"status": "success", "message": "Notification sent!"})
+
+    # new_event_datetime = parser.parse(event_datetime)
+    # counted_time = new_event_datetime - timedelta(minutes=int(selected_time))
+
+    # write_notif_record(telegram_id, user_id, selected_time, event_datetime, counted_time, event_name)
+
+
+    # print(user_id, telegram_id, event_datetime, selected_time, counted_time, 'Active', event_name)
+
+    # return jsonify({"message": "Data received successfully"}), 200
 
 
 # load_dotenv()

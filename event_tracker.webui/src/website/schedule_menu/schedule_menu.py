@@ -1,94 +1,76 @@
-from flask import render_template, Blueprint, session, jsonify
+from flask import render_template, Blueprint, session, request
 import psycopg2, psycopg2.extras
-from datetime import date, datetime, time
+from datetime import datetime
 import locale
 
 locale.setlocale(locale.LC_TIME, 'Russian_Russia.1251')
 schedule_menu_blueprint = Blueprint('schedule_menu', __name__)
 
-@schedule_menu_blueprint.route('/schedule')
+@schedule_menu_blueprint.route('/schedule', methods=['GET'])
 def schedule():
     connection = schedule_menu_blueprint.db_connection()
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     if 'loggedin' in session:
-        print(session)
+        # Получаем параметры пагинации и поиска
+        page = int(request.args.get('page', 1))
+        search_info = request.args.get('search_info', '')
+        items_per_page = 6
 
-        data_account = []
-        cursor.execute("""
-                        select
-                            *
-                        from
-                            evt.event_type;""")
-        
-        data_account.extend((session['id'], session['username']))
-        data_event_type = cursor.fetchall()
-
-        return render_template('schedule.html', account=data_account, event_type=data_event_type)
-
-@schedule_menu_blueprint.route('/get_schedule_data', methods=['GET'])
-def get_schedule_data():
-    connection = schedule_menu_blueprint.db_connection()
-    cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
-    if 'loggedin' in session:
+        # Получаем данные событий
         cursor.execute('''
-            SELECT
-                e.event_date,
-                e.event_name,
-                e.discription,
-                et.event_type_name,
-                COUNT(ep.event_participation_id),
-                e.event_id,
-                e.event_time
-            FROM
-                evt.event AS e
-            INNER JOIN evt.event_type AS et ON
-                e.event_type_id = et.event_type_id
-            LEFT JOIN evt.event_participation ep ON
-                e.event_id = ep.event_id
-            GROUP BY
-                e.event_id,
-                et.event_type_name
-            ORDER BY
-                e.event_date
-        ''')
-        rows = cursor.fetchall()
+            SELECT json_agg(subquery)
+            FROM (
+                SELECT
+                    e.event_date,
+                    e.event_name,
+                    e.description,
+                    et.event_type_name,
+                    COALESCE(ep_count.participant_count, 0) AS participant_count,
+                    e.event_id,
+                    e.event_time
+                FROM
+                    evt.event AS e
+                INNER JOIN
+                    evt.event_type AS et ON e.event_type_id = et.event_type_id
+                LEFT JOIN (
+                    SELECT
+                        event_id,
+                        COUNT(event_participation_id) AS participant_count
+                    FROM
+                        evt.event_participation
+                    GROUP BY
+                        event_id
+                ) AS ep_count ON e.event_id = ep_count.event_id
+                WHERE e.event_name ILIKE %s
+                ORDER BY
+                    e.event_date
+            ) AS subquery;
+        ''', ('%' + search_info + '%',))
+        rows = cursor.fetchone()[0]
 
-        cursor.execute('''
-            SELECT 
-                ep.event_id
-            FROM evt.event_participation as ep
-            WHERE ep.user_id = %s;
-        ''', (session['id'],))
-        user_participation = cursor.fetchall()
+        user_data = session['id']
 
         cursor.close()
         connection.close()
 
-        for i in range(len(rows)):
-            datetime_date = datetime.strptime(str(rows[i][0]), '%Y-%m-%d')
-            formatted_date = datetime_date.strftime('%d %B %Y года')
-            formatted_date = formatted_date.lstrip('0')
-            rows[i][0] = formatted_date
+        # Форматирование даты
+        def format_date(date_str):
+            date_obj = datetime.fromisoformat(date_str)
+            day = date_obj.day
+            month = date_obj.strftime('%B')
+            return f"{day} {month}"
 
-            if isinstance(rows[i][6], time):
-                rows[i][6] = rows[i][6].strftime('%H:%M')
-            else:
-                rows[i][6] = 'Время не указано'
+        for event in rows:
+            event['formatted_time'] = format_date(event['event_date'])
 
-        data = [
-                    {
-                        'event_date': row[0],
-                        'event_name': row[1], 
-                        'event_disc': row[2], 
-                        'event_type': row[3], 
-                        'participation_count': row[4], 
-                        'event_id': row[5], 
-                        'user_id': session['id'], 
-                        'user_participation': user_participation, 
-                        'event_time': row[6]
-                    } for row in rows
-                ]
+        # Пагинация
+        total_items = len(rows)
+        total_pages = (total_items + items_per_page - 1) // items_per_page
+        start_index = (page - 1) * items_per_page
+        end_index = start_index + items_per_page
+        paginated_data = rows[start_index:end_index]
 
-        return jsonify(data)  # Возвращаем данные в формате JSON
+        return render_template('schedule.html', events=paginated_data, total_pages=total_pages, current_page=page, search_info=search_info, user_data=user_data)
+
+    return render_template('schedule.html', events=[], total_pages=0, current_page=1, search_info='')

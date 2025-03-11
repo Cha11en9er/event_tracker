@@ -11,7 +11,7 @@ def create_event():
     event_date = request.form['event_date']
     event_time = request.form['event_time']
     event_name = request.form['event_name']
-    event_discription = request.form['event_discription']
+    event_description = request.form['event_description']
     event_type = request.form.get('event_type_selection')
 
     event_date = event_date.split('-')
@@ -20,8 +20,8 @@ def create_event():
     cursor.execute("""
                     insert into
                         evt.event
-                    (event_id, event_date, event_time, event_name, discription, event_type_id)
-                    values (default, %s, %s, %s, %s, %s)""", (event_date, event_time, event_name, event_discription, event_type ))
+                    (event_id, event_date, event_time, event_name, description, event_type_id)
+                    values (default, %s, %s, %s, %s, %s)""", (event_date, event_time, event_name, event_description, event_type ))
 
     connection.commit() 
     cursor.close() 

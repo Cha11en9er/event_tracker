@@ -3,18 +3,18 @@
 {% block title %} Главная {% endblock %}
 
 {% block header %}
-<div class="header_content">
-    <h1 class="header_title">Event tracker</h1>
-
+<div class="header_content d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center">
+        <i class="bi bi-calendar2-event me-2"></i>
+        <h1 class="header_title mb-0">Event Tracker</h1>
+    </div>
     <nav aria-label="breadcrumb" class="main-breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item" aria-current="page">Расписание</li>
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item active" aria-current="page">HomeEvents</li>
         </ol>
     </nav>
-
     <div class="header_links">
-        <a class="btn_login" href="{{ url_for('user_page.user_page', user_id_from_form=account[0] ) }}">Профиль</a>
-        <a class="btn_registr" href="{{ url_for('auth.logout') }}">Выйти</a>
+        <a class="btn_login" href="{{ url_for('user_page.user_page', user_id_from_form=user_data ) }}">Профиль</a>
     </div>
 </div>
 {% endblock %}
@@ -23,67 +23,76 @@
 <div class="form_popup" id="form_popup">
     <form class="form_container" id="schedule_form" action="/create_event" method="POST">
         <div class="form_data">
-            <div class="form_header">
-                <h1>Информация о ивенте</h1>
-                <button type="button" class="btn_cancel" onclick="close_form()">Закрыть</button>
+            <div class="form_header d-flex justify-content-between align-items-center mb-3">
+                <h1>Информация о событии</h1>
+                <button type="button" class="btn btn-secondary" onclick="close_form()">Закрыть</button>
             </div>
-
-            <input class="form_input" type="date" name="event_date" placeholder="Дата события" id="event_date">
-            <input class="form_input" type="time" name="event_time" placeholder="Время события" id="event_time">
-            <input class="form_input" type="text" name="event_name" placeholder="Название события">
-            <input class="form_input" type="text" name="event_discription" placeholder="Описание события">
-            
-            <select name="event_type_selection" class="form_input">
-                <option value="" disabled selected>Выберите тип ивента</option>
-                {% for row in event_type %}
-                    <option value="{{ row[0] }}">{{ row[1] }}</option>
-                {% endfor %}
-            </select>
-
-            <input type="submit" value="Добавить новый">
+            <div class="mb-3">
+                <input class="form-control" type="date" name="event_date" placeholder="Дата события" id="event_date">
+            </div>
+            <div class="mb-3">
+                <input class="form-control" type="time" name="event_time" placeholder="Время события" id="event_time">
+            </div>
+            <div class="mb-3">
+                <input class="form-control" type="text" name="event_name" placeholder="Название события">
+            </div>
+            <div class="mb-3">
+                <input class="form-control" type="text" name="event_description" placeholder="Описание события">
+            </div>
+            <div class="mb-3">
+                <select name="event_type_selection" class="form-select">
+                    <option value="" disabled selected>Выберите тип события</option>
+                    {% for row in event_type %}
+                        <option value="{{ row[0] }}">{{ row[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить новый</button>
         </div>
     </form>
 </div>
 
 <div id="schedule_main">
-
     <div class="container mt-5">
-        <p class="table_header border text-center">
-            Все ивенты 
-            <button class="create_event_btn" onclick="open_form()">Добавить ивент</button>
-            <form id="search-form">
-                <input type="text" class="search-input" placeholder="Поиск" name="search_info">
-                <input type="submit" value="Найти">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <form id="search-form" class="d-flex align-items-center" method="GET" action="/schedule">
+                <input type="text" class="search-input form-control me-2" placeholder="Поиск событий..." name="search_info" value="{{ search_info }}">
+                <input type="submit" class="btn btn-primary" value="Найти">
             </form>
-        </p>
-        <div class="row">
-            <div class="col-12">
-                <table class="table table-striped table-bordered" id="schedule_table">
-                    
-                    <!-- <caption class="table_head">Все ивенты <button class="create_event_btn" onclick="open_form()">Добавить ивент</button></caption> -->
-
-                    <thead>
-                        <tr>
-                            <th class="col_data">Название</th>
-                            <th class="col_name">Описание</th>
-                            <th class="col_disc">Дата</th>
-                            <th class="col_type">Вид мероприятия</th>
-                            <th class="col_user">Количество участников</th>
-                            <th class="col_btn"></th>
+            <button class="btn btn-primary" type="button" onclick="open_form()">
+                Создать событие
+            </button>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Описание</th>
+                        <th>Дата</th>
+                        <th>Вид мероприятия</th>
+                        <th>Количество участников</th>
+                    </tr>
+                </thead>
+                <tbody id="schedule_data">
+                    {% for event in events %}
+                        <tr class="table_row" onclick="location.href='{{ url_for('current_event.current_event', event_id_from_schedule=event.event_id ) }}'">
+                            <td>{{ event.event_name }}</td>
+                            <td>{{ event.description }}</td>
+                            <td>{{ event.formatted_time }}</td>
+                            <td>{{ event.event_type_name }}</td>
+                            <td>{{ event.participant_count }}</td>
                         </tr>
-                    </thead>
-
-                    <tbody id="schedule_data">
-                        <tr class="table_row">
-                            <td colspan="6">Закгрузка</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div id="pagination"></div>
-            </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="pagination" class="d-flex justify-content-center">
+            {% for page_num in range(1, total_pages + 1) %}
+                <a href="/schedule?page={{ page_num }}&search_info={{ search_info }}" class="btn btn-outline-secondary">{{ page_num }}</a>
+            {% endfor %}
         </div>
     </div>
-
 </div>
+
 {% endblock %}

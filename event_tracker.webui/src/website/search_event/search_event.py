@@ -11,6 +11,8 @@ def get_search_event():
 
     search_info = request.args.get('search_info')
 
+    print(search_info)
+
     if 'loggedin' in session:
         cursor.execute(f"""
                         SELECT
