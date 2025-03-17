@@ -31,13 +31,18 @@ def current_event(event_id_from_schedule):
     cursor.execute('''
                     SELECT
                         json_build_object(
+                            'event_id', e.event_id,
                             'event_date', e.event_date,
                             'event_time', e.event_time,
                             'event_name', e.event_name,
                             'event_type_id', e.event_type_id,
                             'description', e.description,
-                            'fullname', array_agg(u.fullname),
-                            'user_id', array_agg(u.user_id)
+                            'participants', array_agg(
+                                json_build_object(
+                                    'fullname', u.fullname,
+                                    'user_id', u.user_id
+                                )
+                            )
                         ) AS event
                     FROM
                         evt."event" e
@@ -52,7 +57,7 @@ def current_event(event_id_from_schedule):
                     WHERE
                         e.event_id = %s
                     GROUP BY
-                        e.event_date, e.event_time, e.event_name, e.event_type_id, e.description;
+                        e.event_id, e.event_date, e.event_time, e.event_name, e.event_type_id, e.description;
     ''', (event_id_from_schedule,))
     event_dict = cursor.fetchone()
 
@@ -65,6 +70,13 @@ def current_event(event_id_from_schedule):
     ''', (user_session_id, event_id_from_schedule, ))
     user_current_event_participation = cursor.fetchone()
 
+    cursor.execute('''
+                    SELECT r.role_description
+                    FROM evt.role as r
+                    WHERE r.user_id = %s
+                    ''', (user_session_id,))
+    user_role = cursor.fetchone()
+
     event_data = event_dict[0]
 
     event_data['description'] = add_hyperlinks(event_data['description'])
@@ -76,8 +88,8 @@ def current_event(event_id_from_schedule):
 
     event_data['formatted_time'] = format_date(event_data['event_date'])
 
-    if not event_data['user_id'] or all(user_id is None for user_id in event_data['user_id']):
-        event_data['fullname'] = ['В мероприятии нету участников. Вы можете стать первым']
+    # if not event_data['user_id'] or all(user_id is None for user_id in event_data['user_id']):
+    #     event_data['fullname'] = ['В мероприятии нету участников. Вы можете стать первым']
     
     if session['telegram_id'] is None:
         event_data['user_telegram_id'] = 'False'
@@ -85,6 +97,7 @@ def current_event(event_id_from_schedule):
         event_data['user_telegram_id'] = session['telegram_id']
 
     event_data['user_current_id'] = session['id']
+    event_data['user_role'] = user_role[0]
 
     print(event_data)
 

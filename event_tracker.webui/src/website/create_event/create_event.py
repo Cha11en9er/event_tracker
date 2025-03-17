@@ -1,4 +1,4 @@
-from flask import request, redirect, url_for, Blueprint
+from flask import request, redirect, url_for, Blueprint, flash
 import psycopg2, psycopg2.extras
 
 create_event_blueprint = Blueprint('create_event', __name__)
@@ -26,5 +26,7 @@ def create_event():
     connection.commit() 
     cursor.close() 
     connection.close()
+
+    flash(f'Вы создали мероприятие {event_name}')
 
     return redirect(url_for('schedule_menu.schedule'))

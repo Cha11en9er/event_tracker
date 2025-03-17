@@ -1,36 +1,90 @@
-<!-- <div class="modal fade" id="event_popup">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="notificationModalLabel">Выберите время оповещения</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мероприятие</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .event-description {
+            max-height: 200px; /* Максимальная высота для описания */
+            overflow-y: auto; /* Прокрутка по вертикали */
+        }
+        .participants {
+            max-height: 300px; /* Максимальная высота для участников */
+            overflow-y: auto; /* Прокрутка по вертикали */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Название мероприятия -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Название мероприятия</h5>
+                    </div>
+                </div>
+
+                <!-- Дата, время, тип мероприятия -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Дата, время, тип мероприятия</h5>
+                        <p class="card-text">Дата: 10 октября 2023</p>
+                        <p class="card-text">Время: 18:00</p>
+                        <p class="card-text">Тип: Конференция</p>
+                    </div>
+                </div>
+
+                <!-- Подписчики -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Подписчики</h5>
+                        <p class="card-text">Количество подписчиков: 150</p>
+                    </div>
+                </div>
+
+                <!-- Удалить -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <button class="btn btn-danger">Удалить</button>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="notificationTime" id="5min" value="15">
-                    <label class="form-check-label" for="5min">15 минут</label>
+            <div class="col-md-8">
+                <!-- Описание -->
+                <div class="card mb-3">
+                    <div class="card-body event-description">
+                        <h5 class="card-title">Описание</h5>
+                        <p class="card-text">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+                            Sed nisi. Nulla quis sem at nibh elementum imperdiet.
+                            Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta.
+                            Mauris massa. Vestibulum lacinia arcu eget nulla.
+                            Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+                            Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.
+                        </p>
+                    </div>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="notificationTime" id="15min" value="30">
-                    <label class="form-check-label" for="15min">30 минут</label>
+
+                <!-- Участники -->
+                <div class="card mb-3">
+                    <div class="card-body participants">
+                        <h5 class="card-title">Участники</h5>
+                        <ul class="list-group">
+                            <li class="list-group-item">Участник 1</li>
+                            <li class="list-group-item">Участник 2</li>
+                            <li class="list-group-item">Участник 3</li>
+                            <!-- Добавьте больше участников по мере необходимости -->
+                        </ul>
+                    </div>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="notificationTime" id="30min" value="60">
-                    <label class="form-check-label" for="30min">1 час</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary" id="saveNotification"
-                data-telegram-id="{{ static_data.user_telegram_id }}" 
-                data-user-id="{{ static_data.user_id }}"
-                data-event-datetime="{{ static_data.event_datetime }}"
-                data-event-name="{{ static_data.event_name }}">
-                    Сохранить
-                </button>
-                
-                <div id="telegramMessage" class="alert" style="display: none; margin-top: 10px;"></div>
             </div>
         </div>
     </div>
-</div> -->
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

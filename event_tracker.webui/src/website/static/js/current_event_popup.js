@@ -31,9 +31,6 @@ function save_and_submit_notif() {
     .then(data => {
         if (data.status === 'success') {
             show_notif_result();
-            setTimeout(() => {
-                $('#event_popup').modal('hide');
-            }, 2000); // Закрыть модальное окно через 2 секунды
         } else {
             alert('Не удалось отправить уведомление');
         }
@@ -42,4 +39,36 @@ function save_and_submit_notif() {
         console.error('Ошибка:', error);
         alert('Произошла ошибка при отправке уведомления');
     });
+}
+
+function subscribeToEvent(button) {
+    const userId = button.getAttribute('data-user-id');
+    const eventId = button.getAttribute('data-event-id');
+
+    console.log(eventId)
+
+    const formData = new FormData();
+    formData.append('event_id_from_js', eventId);
+    formData.append('user_id_from_js', userId);
+
+    fetch('/subscribe_to_event', {
+        method: 'POST',
+        body: formData
+    })
+}
+
+function unSubscribeToEvent(button) {
+    const userId = button.getAttribute('data-user-id');
+    const eventId = button.getAttribute('data-event-id');
+
+    console.log(eventId)
+
+    const formData = new FormData();
+    formData.append('event_id_from_js', eventId);
+    formData.append('user_id_from_js', userId);
+
+    fetch('/unsubscribe_from_event', {
+        method: 'POST',
+        body: formData
+    })
 }

@@ -80,10 +80,10 @@ def register():
             cursor.execute('SELECT * FROM evt.user WHERE username = %s', (username,))
             account_data = cursor.fetchone()
 
-            cursor.execute("INSERT INTO evt.role (user_id, role_discription) VALUES (%s, %s)", (account_data[0], 'Viewer'))
+            cursor.execute("INSERT INTO evt.role (user_id, role_description) VALUES (%s, %s)", (account_data[0], 'Viewer'))
             connection.commit()
 
-            cursor.execute('SELECT role_discription FROM evt.role WHERE user_id = %s', (account_data[0],))
+            cursor.execute('SELECT role_description FROM evt.role WHERE user_id = %s', (account_data[0],))
             role_data = cursor.fetchone()
 
             session['loggedin'] = True

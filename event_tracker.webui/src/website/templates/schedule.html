@@ -21,7 +21,7 @@
 
 {% block main %}
 <div class="form_popup" id="form_popup">
-    <form class="form_container" id="schedule_form" action="/create_event" method="POST">
+    <form class="form_container" id="schedule_form" action="/create_event" method="POST" onsubmit="return validateForm()">
         <div class="form_data">
             <div class="form_header d-flex justify-content-between align-items-center mb-3">
                 <h1>Информация о событии</h1>
@@ -49,6 +49,8 @@
             </div>
             <button type="submit" class="btn btn-primary">Добавить новый</button>
         </div>
+        <!-- Error messages section -->
+        <div class="error_messages" id="error_messages"></div>
     </form>
 </div>
 
@@ -75,24 +77,33 @@
                     </tr>
                 </thead>
                 <tbody id="schedule_data">
-                    {% for event in events %}
-                        <tr class="table_row" onclick="location.href='{{ url_for('current_event.current_event', event_id_from_schedule=event.event_id ) }}'">
-                            <td>{{ event.event_name }}</td>
-                            <td>{{ event.description }}</td>
-                            <td>{{ event.formatted_time }}</td>
-                            <td>{{ event.event_type_name }}</td>
-                            <td>{{ event.participant_count }}</td>
+                    {% if no_results %}
+                        <tr>
+                            <td colspan="5" class="text-center">Мероприятий с названием или описанием "{{ search_info }}" не найдено</td>
                         </tr>
-                    {% endfor %}
+                    {% else %}
+                        {% for event in events %}
+                            <tr class="table_row" onclick="location.href='{{ url_for('current_event.current_event', event_id_from_schedule=event.event_id ) }}'">
+                                <td>{{ event.event_name }}</td>
+                                <td>{{ event.description }}</td>
+                                <td>{{ event.formatted_time }}</td>
+                                <td>{{ event.event_type_name }}</td>
+                                <td>{{ event.participant_count }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
                 </tbody>
             </table>
         </div>
         <div id="pagination" class="d-flex justify-content-center">
-            {% for page_num in range(1, total_pages + 1) %}
-                <a href="/schedule?page={{ page_num }}&search_info={{ search_info }}" class="btn btn-outline-secondary">{{ page_num }}</a>
-            {% endfor %}
+            {% if total_pages > 1 %}
+                {% for page_num in range(1, total_pages + 1) %}
+                    <a href="/schedule?page={{ page_num }}&search_info={{ search_info }}" class="btn btn-outline-secondary">{{ page_num }}</a>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 </div>
+
 
 {% endblock %}
