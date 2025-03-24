@@ -1,11 +1,22 @@
 [
-    {'event_date': '2025-03-08T00: 00: 00', 'event_name': 'собрание в честь 8 марта', 'description': 'собрание мидлов для распределения джунов', 'event_type_name': 'собрание', 'participant_count': 3, 'event_id': 3, 'event_time': '00: 00: 00', 'formatted_time': '8 Март'
+    {
+        "notification_id": 1,
+        "user_id": 2,
+        "user_telegram_id": 508607571,
+        "event_date": "2025-03-21T20:12:00",
+        "notif_user_time": 30,
+        "notif_time": "2025-03-21T19:42:00",
+        "notif_status": "Active",
+        "event_name": "test event 20:12"
     },
-    {'event_date': '2025-03-08T00: 00: 00', 'event_name': 'собрание в честь 8 марта', 'description': 'собрание мидлов для распределения джунов', 'event_type_name': 'собрание', 'participant_count': 1, 'event_id': 8, 'event_time': '00: 00: 00', 'formatted_time': '8 Март'
-    },
-    {'event_date': '2025-03-08T08: 00: 00', 'event_name': 'форум', 'description': 'форум в рязани', 'event_type_name': 'форум', 'participant_count': 0, 'event_id': 2, 'event_time': '08: 00: 00', 'formatted_time': '8 Март'
-    },
-    {'event_date': '2025-03-08T08: 00: 00', 'event_name': 'форум', 'description': 'форум 
-в рязани', 'event_type_name': 'форум', 'participant_count': 0, 'event_id': 7, 'event_time': '08: 00: 00', 'formatted_time': '8 Март'
+    {
+        "notification_id": 2,
+        "user_id": 2,
+        "user_telegram_id": 508607571,
+        "event_date": "2025-03-20T00:00:00",
+        "notif_user_time": 15,
+        "notif_time": "2025-03-19T23:45:00",
+        "notif_status": "Active",
+        "event_name": "test 20:45"
     }
 ]

@@ -15,7 +15,7 @@ def create_event():
     event_type = request.form.get('event_type_selection')
 
     event_date = event_date.split('-')
-    event_date = event_date[2] + '.' + event_date[1] + '.' + event_date[0]
+    event_date = event_date[0] + '-' + event_date[1] + '-' + event_date[2] + ' ' + event_time + ':00'
 
     cursor.execute("""
                     insert into
@@ -26,7 +26,7 @@ def create_event():
     connection.commit() 
     cursor.close() 
     connection.close()
-
+    
     flash(f'Вы создали мероприятие {event_name}')
 
     return redirect(url_for('schedule_menu.schedule'))

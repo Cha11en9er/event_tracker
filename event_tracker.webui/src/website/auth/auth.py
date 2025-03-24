@@ -21,7 +21,7 @@ def login():
                             u.fullname,
                             u.username,
                             u.password,
-                            r.role_discription,
+                            r.role_description,
                             u.telegram_id
                           FROM evt.user as u 
                           INNER JOIN evt.role AS r

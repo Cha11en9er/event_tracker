@@ -17,7 +17,6 @@ def schedule():
         search_info = request.args.get('search_info', '')
         items_per_page = 6
 
-        print(search_info)
         # Получаем данные событий
         cursor.execute('''
             SELECT json_agg(subquery)
@@ -75,9 +74,6 @@ def schedule():
         else:
             paginated_data = []
             total_pages = 1
-
-        print('###############')
-        print(paginated_data)
 
         return render_template('schedule.html', events=paginated_data, total_pages=total_pages, current_page=page, search_info=search_info, user_data=user_data, no_results=not rows)
 
