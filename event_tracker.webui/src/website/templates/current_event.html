@@ -3,25 +3,27 @@
 {% block title %} {{ data.event_name }} {% endblock %}
 
 {% block header %}
-<div class="header_content d-flex justify-content-between align-items-center mb-4">
-    <div class="d-flex align-items-center">
-        <i class="bi bi-calendar2-event me-2"></i>
-        <h1 class="header_title mb-0">Event Tracker</h1>
+<div class="header">
+    <div class="header-left">
+        <h1>Event Tracker</h1>
     </div>
-    <nav aria-label="breadcrumb" class="main-breadcrumb">
+
+    <nav aria-label="breadcrumb" class="header-center">
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item active">
-                <a class="btn_registr" href="{{ url_for('schedule_menu.schedule') }}">
-                    HomeEvents
+                <a href="{{ url_for('schedule_menu.schedule') }}">
+                    Главная
                 </a>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
-                {{ data.event_name }}
+                    {{ data.event_name }}
             </li>
         </ol>
     </nav>
-    <div class="header_links">
-        <a class="btn_login" href="{{ url_for('user_page.user_page', user_id_from_form=data.user_current_id ) }}">Профиль</a>
+    <div class="header-right">
+        <div class="user-circle" onclick="location.href='{{ url_for('user_page.user_page', user_id_from_form=data.current_user_role_id ) }}'">
+            U
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -91,7 +93,7 @@
                 <div class="card-body">
                     <h5 class="card-title"></h5>
                     <p class="card-text">Дата: {{ data.formatted_time }} Время: {{ data.event_time }}</p>
-                    <p class="card-text">Тип: тип</p>
+                    <p class="card-text">Тип: {{ data.event_type_name }}</p>
                 </div>
             </div>
 
@@ -99,7 +101,7 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Участники</h5>
-                    <p class="card-text">Количество участников: 150</p>
+                    <p class="card-text">Количество участников: {{ data.total_participants }}</p>
                 </div>
             </div>
 

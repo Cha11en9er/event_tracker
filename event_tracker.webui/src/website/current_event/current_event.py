@@ -35,14 +35,15 @@ def current_event(event_id_from_schedule):
                             'event_date', e.event_date,
                             'event_time', e.event_time,
                             'event_name', e.event_name,
-                            'event_type_id', e.event_type_id,
+                            'event_type_name', et.event_type_name,
                             'description', e.description,
                             'participants', array_agg(
                                 json_build_object(
                                     'fullname', u.fullname,
                                     'user_id', u.user_id
                                 )
-                            )
+                            ),
+                            'total_participants', COUNT(u.user_id)  -- Добавляем общее количество участников
                         ) AS event
                     FROM
                         evt."event" e
@@ -54,10 +55,14 @@ def current_event(event_id_from_schedule):
                         evt."user" AS u
                     ON
                         ep.user_id = u.user_id
+                    LEFT JOIN 
+                        evt.event_type AS et
+                    ON
+                        e.event_type_id = et.event_type_id 
                     WHERE
                         e.event_id = %s
                     GROUP BY
-                        e.event_id, e.event_date, e.event_time, e.event_name, e.event_type_id, e.description;
+                        e.event_id, e.event_date, e.event_time, e.event_name, et.event_type_name, e.description;
     ''', (event_id_from_schedule,))
     event_dict = cursor.fetchone()
 
@@ -87,9 +92,6 @@ def current_event(event_id_from_schedule):
         event_data['event_participation'] = 'True'
 
     event_data['formatted_time'] = format_date(event_data['event_date'])
-
-    # if not event_data['user_id'] or all(user_id is None for user_id in event_data['user_id']):
-    #     event_data['fullname'] = ['В мероприятии нету участников. Вы можете стать первым']
     
     if session['telegram_id'] is None:
         event_data['user_telegram_id'] = 'False'
@@ -98,6 +100,7 @@ def current_event(event_id_from_schedule):
 
     event_data['user_current_id'] = session['id']
     event_data['user_role'] = user_role[0]
+    event_data['current_user_role_id'] = session['id']
 
     print(event_data)
 

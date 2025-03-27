@@ -1,20 +1,19 @@
 {% extends 'main.html' %}
 
-{% block title %} Главная {% endblock %}
+{% block title %}Главная{% endblock %}
 
 {% block header %}
-<div class="header_content d-flex justify-content-between align-items-center mb-4">
-    <div class="d-flex align-items-center">
-        <i class="bi bi-calendar2-event me-2"></i>
-        <h1 class="header_title mb-0">Event Tracker</h1>
+<div class="header">
+    <div class="header-left">
+        <h1>Event Tracker</h1>
     </div>
-    <nav aria-label="breadcrumb" class="main-breadcrumb">
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item active" aria-current="page">HomeEvents</li>
-        </ol>
-    </nav>
-    <div class="header_links">
-        <a class="btn_login" href="{{ url_for('user_page.user_page', user_id_from_form=user_data ) }}">Профиль</a>
+    <div class="header-center">
+        <span>Главная</span>
+    </div>
+    <div class="header-right">
+        <div class="user-circle" onclick="location.href='{{ url_for('user_page.user_page', user_id_from_form=user_data ) }}'">
+            U
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -23,23 +22,23 @@
 <div class="form_popup" id="form_popup">
     <form class="form_container" id="schedule_form" action="/create_event" method="POST" onsubmit="return validateForm()">
         <div class="form_data">
-            <div class="form_header d-flex justify-content-between align-items-center mb-3">
+            <div class="form_header">
                 <h1>Информация о событии</h1>
-                <button type="button" class="btn btn-secondary" onclick="close_form()">Закрыть</button>
+                <button type="button" class="close-button" onclick="close_form()">×</button>
             </div>
-            <div class="mb-3">
+            <div class="form-group">
                 <input class="form-control" type="date" name="event_date" placeholder="Дата события" id="event_date">
             </div>
-            <div class="mb-3">
+            <div class="form-group">
                 <input class="form-control" type="time" name="event_time" placeholder="Время события" id="event_time">
             </div>
-            <div class="mb-3">
+            <div class="form-group">
                 <input class="form-control" type="text" name="event_name" placeholder="Название события">
             </div>
-            <div class="mb-3">
+            <div class="form-group">
                 <input class="form-control" type="text" name="event_description" placeholder="Описание события">
             </div>
-            <div class="mb-3">
+            <div class="form-group">
                 <select name="event_type_selection" class="form-select">
                     <option value="" disabled selected>Выберите тип события</option>
                     {% for row in event_type %}
@@ -47,63 +46,248 @@
                     {% endfor %}
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Добавить новый</button>
+            <button type="submit" class="submit-button">Добавить событие</button>
         </div>
-        <!-- Error messages section -->
         <div class="error_messages" id="error_messages"></div>
     </form>
 </div>
 
-<div id="schedule_main">
-    <div class="container mt-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <form id="search-form" class="d-flex align-items-center" method="GET" action="/schedule">
-                <input type="text" class="search-input form-control me-2" placeholder="Поиск событий..." name="search_info" value="{{ search_info }}">
-                <input type="submit" class="btn btn-primary" value="Найти">
-            </form>
-            <button class="btn btn-primary" type="button" onclick="open_form()">
-                Создать событие
-            </button>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Название</th>
-                        <th>Описание</th>
-                        <th>Дата</th>
-                        <th>Вид мероприятия</th>
-                        <th>Количество участников</th>
-                    </tr>
-                </thead>
-                <tbody id="schedule_data">
-                    {% if no_results %}
+<div class="welcome-section">
+    <div class="welcome-text">
+        <h2>Здесь показаны все мероприятия, происходящие в жизни компании. Выберите то, которое вам по душе.</h2>
+        <p>Не можете найти? Мы поможем!</p>
+    </div>
+    <div class="welcome-actions">
+        <form id="search-form" method="GET" action="/schedule">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Поиск событий..." name="search_info" value="{{ search_info }}">
+                <button type="submit" class="search-button">Найти</button>
+            </div>
+        </form>
+        <button class="create-button" type="button" onclick="open_form()">
+            Создать событие
+        </button>
+    </div>
+</div>
+
+<div class="content-section">
+    <div class="content-grid">
+        <div class="main-content">
+            <div class="table-container">
+                <table class="events-table">
+                    <thead>
                         <tr>
-                            <td colspan="5" class="text-center">Мероприятий с названием или описанием "{{ search_info }}" не найдено</td>
+                            <th>Название</th>
+                            <th>Описание</th>
+                            <th>Дата</th>
+                            <th>Вид мероприятия</th>
                         </tr>
-                    {% else %}
-                        {% for event in events %}
-                            <tr class="table_row" onclick="location.href='{{ url_for('current_event.current_event', event_id_from_schedule=event.event_id ) }}'">
-                                <td>{{ event.event_name }}</td>
-                                <td>{{ event.description }}</td>
-                                <td>{{ event.formatted_time }}</td>
-                                <td>{{ event.event_type_name }}</td>
-                                <td>{{ event.participant_count }}</td>
+                    </thead>
+                    <tbody>
+                        {% if no_results %}
+                            <tr>
+                                <td colspan="4" class="text-center">Мероприятий с названием или описанием "{{ search_info }}" не найдено</td>
                             </tr>
-                        {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
+                        {% else %}
+                            {% for event in events %}
+                                <tr class="event-row" onclick="location.href='{{ url_for('current_event.current_event', event_id_from_schedule=event.event_id ) }}'">
+                                    <td>{{ event.event_name }}</td>
+                                    <td>{{ event.description }}</td>
+                                    <td>{{ event.formatted_time }}</td>
+                                    <td>{{ event.event_type_name }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="pagination">
+                {% if total_pages > 1 %}
+                    {% for page_num in range(1, total_pages + 1) %}
+                        <a href="/schedule?page={{ page_num }}&search_info={{ search_info }}" 
+                           class="pagination-button {% if page_num == current_page %}active{% endif %}">
+                            {{ page_num }}
+                        </a>
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
-        <div id="pagination" class="d-flex justify-content-center">
-            {% if total_pages > 1 %}
-                {% for page_num in range(1, total_pages + 1) %}
-                    <a href="/schedule?page={{ page_num }}&search_info={{ search_info }}" class="btn btn-outline-secondary">{{ page_num }}</a>
-                {% endfor %}
-            {% endif %}
+
+        <div class="side-content">
+            <div class="calendar-container">
+                <h3>Календарь событий</h3>
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-nav">&lt;</button>
+                        <span class="current-month">Март 2024</span>
+                        <button class="calendar-nav">&gt;</button>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="weekday">Пн</div>
+                        <div class="weekday">Вт</div>
+                        <div class="weekday">Ср</div>
+                        <div class="weekday">Чт</div>
+                        <div class="weekday">Пт</div>
+                        <div class="weekday">Сб</div>
+                        <div class="weekday">Вс</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="past-events">
+                <h3>Прошедшие события</h3>
+                <div class="past-events-list">
+                    {% for event in past_events %}
+                    <div class="past-event-item">
+                        <div class="past-event-name">{{ event.event_name }}</div>
+                        <div class="past-event-date">{{ event.formatted_time }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<style>
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    gap: 1.5rem;
+    align-items: start;
+    min-height: calc(100vh - 250px);
+}
+
+.main-content {
+    min-width: 0;
+    height: 100%;
+}
+
+.table-container {
+    height: calc(100vh - 450px);
+    overflow-y: auto;
+}
+
+.side-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.calendar-container, .past-events {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 1rem;
+}
+
+.calendar-container h3, .past-events h3 {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+.past-events {
+    margin-top: 1rem;
+}
+
+.past-events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.past-event-item {
+    padding: 0.5rem;
+    border-radius: 6px;
+    background: #f8f9fa;
+    transition: background-color 0.2s;
+}
+
+.past-event-item:hover {
+    background: #f0f0f0;
+}
+
+.past-event-name {
+    font-size: 0.9rem;
+    color: #333;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.past-event-date {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+/* Стилизация скроллбара */
+.past-events-list::-webkit-scrollbar,
+.table-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.past-events-list::-webkit-scrollbar-track,
+.table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.past-events-list::-webkit-scrollbar-thumb,
+.table-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.past-events-list::-webkit-scrollbar-thumb:hover,
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* Календарь */
+.calendar {
+    width: 100%;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.calendar-nav {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 0.25rem;
+    font-size: 1rem;
+}
+
+.current-month {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+    text-align: center;
+}
+
+.weekday {
+    font-size: 0.75rem;
+    color: #666;
+    padding: 0.25rem 0;
+}
+</style>
 
 {% endblock %}

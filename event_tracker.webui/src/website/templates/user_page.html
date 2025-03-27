@@ -5,16 +5,27 @@
 {% block title %} Профиль {% endblock %}
 
 {% block header %}
-<div class="header_content">
-    <div class="header_smth">
-        <p>Тех. поддержка</p>
+<div class="header">
+    <div class="header-left">
+        <h1>Event Tracker</h1>
     </div>
 
-    <h1 class="header_title">Event tracker</h1>
-
-    <div class="header_links">
-        <a class="btn_registr" href="{{ url_for('schedule_menu.schedule') }}">Ко всем ивентам</a>
-        <a class="btn_registr" href="{{ url_for('auth.logout') }}">Выйти</a>
+    <nav aria-label="breadcrumb" class="header-center">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item active">
+                <a href="{{ url_for('schedule_menu.schedule') }}">
+                    Главная
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                    Профиль
+            </li>
+        </ol>
+    </nav>
+    <div class="header-right">
+        <div class="user-circle">
+            <a class="btn_registr" href="{{ url_for('auth.logout') }}">Выйти</a>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,13 +1,21 @@
 function open_form() {
-    document.getElementById('schedule_main').classList.add('blur');
+    document.querySelector('.content-section').classList.add('blur');
+    document.querySelector('.welcome-section').classList.add('blur');
     const formPopup = document.getElementById('form_popup');
-    formPopup.classList.add('show'); // Добавляем класс для плавного появления
+    formPopup.style.display = 'block';
+    setTimeout(() => {
+        formPopup.classList.add('show');
+    }, 10);
 }
 
 function close_form() {
-    document.getElementById('schedule_main').classList.remove('blur');
+    document.querySelector('.content-section').classList.remove('blur');
+    document.querySelector('.welcome-section').classList.remove('blur');
     const formPopup = document.getElementById('form_popup');
-    formPopup.classList.remove('show'); // Удаляем класс для скрытия
+    formPopup.classList.remove('show');
+    setTimeout(() => {
+        formPopup.style.display = 'none';
+    }, 300);
 }
 
 function validateForm() {
@@ -31,7 +39,7 @@ function validateForm() {
     // Проверка времени
     if (!eventTime) {
         const errorTime = document.createElement('div');
-        errorDate.textContent = 'Не введено время';
+        errorTime.textContent = 'Не введено время';
         errorMessages.appendChild(errorTime);
         return false; // Останавливаем выполнение, если дата не введена
     }

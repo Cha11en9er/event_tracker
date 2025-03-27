@@ -27,29 +27,25 @@ def db_connection():
 
 def create_app():
     app = Flask(__name__)
-
     app.secret_key = os.getenv('SECRET_KEY')
 
-    app.register_blueprint(auth_blueprint, url_prefix='/')
-    app.register_blueprint(schedule_menu_blueprint, url_prefix='/')
-    app.register_blueprint(current_event_blueprint, url_prefix='/')
-    app.register_blueprint(sub_unsub_event_blueprint, url_prefix='/')
-    app.register_blueprint(create_event_blueprint, url_prefix='/')
-    app.register_blueprint(user_page_blueprint, url_prefix='/')
-    app.register_blueprint(delete_event_blueprint, url_prefix='/')
-    app.register_blueprint(search_event_blueprint, url_prefix='/')
-    app.register_blueprint(edit_profile_blueprint, url_prefix='/')
-    app.register_blueprint(send_notif_blueprint, url_prefix='/')
+    # Список всех blueprint'ов
+    blueprints = [
+        auth_blueprint,
+        schedule_menu_blueprint,
+        current_event_blueprint,
+        sub_unsub_event_blueprint,
+        create_event_blueprint,
+        user_page_blueprint,
+        delete_event_blueprint,
+        search_event_blueprint,
+        edit_profile_blueprint,
+        send_notif_blueprint
+    ]
 
-    auth_blueprint.db_connection = db_connection
-    schedule_menu_blueprint.db_connection = db_connection
-    current_event_blueprint.db_connection = db_connection
-    sub_unsub_event_blueprint.db_connection = db_connection
-    create_event_blueprint.db_connection = db_connection
-    user_page_blueprint.db_connection = db_connection
-    delete_event_blueprint.db_connection = db_connection
-    search_event_blueprint.db_connection = db_connection
-    edit_profile_blueprint.db_connection = db_connection
-    send_notif_blueprint.db_connection = db_connection
+    # Регистрация всех blueprint'ов и назначение функции подключения к БД
+    for blueprint in blueprints:
+        app.register_blueprint(blueprint, url_prefix='/')
+        blueprint.db_connection = db_connection
 
     return app
