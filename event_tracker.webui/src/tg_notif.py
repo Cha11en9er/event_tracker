@@ -17,11 +17,6 @@ def db_connection():
     env_database = os.getenv('DB_NAME')
     env_user = os.getenv('DB_USER')
     env_password = os.getenv('DB_PASSWORD')
-    print(f"\nПодключение к БД:")
-    print(f"Host: {env_host}")
-    print(f"Port: {env_port}")
-    print(f"Database: {env_database}")
-    print(f"User: {env_user}")
     connection = psycopg2.connect(host=env_host, port=env_port, database=env_database, user=env_user, password=env_password) 
     return connection
 
@@ -29,7 +24,6 @@ def get_notif_data():
     connection = db_connection()
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    # Получаем активные уведомления с telegram_id из таблицы user
     cursor.execute("""
                     SELECT json_agg(n)
                     FROM (
@@ -50,10 +44,10 @@ def get_notif_data():
                   """)
     
     result = cursor.fetchone()
-    print(f"\nРезультат запроса: {result}")
+    # print(f"\nРезультат запроса: {result}")
     
     if result is None or result[0] is None:
-        print("Нет данных для обработки")
+        # print("Нет данных для обработки")
         rows = []
     else:
         rows = result[0]
@@ -78,7 +72,7 @@ def get_notif_data():
 async def send_notification(chat_id, event_name, event_time, notif_time):
     bot = Bot(token=os.getenv('TG_BOT_TOKEN'))
     try:
-        message = f"Напоминание! Событие '{event_name}' начнется через {notif_time} минут ({event_time})"
+        message = f"Напоминание! Событие '{event_name}' начнется меньше чем через {notif_time} минут"
         await bot.send_message(chat_id=chat_id, text=message)
         return True
     except TelegramError as e:

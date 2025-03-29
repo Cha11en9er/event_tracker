@@ -618,6 +618,7 @@ html, body {
 
 .user_page_main {
     display: flex;
+    margin-top: 80px;
 }
 
 .user_page_avatar {
@@ -630,7 +631,7 @@ html, body {
 /* current_event start */
 
 .current_event_main {
-    margin-top: 80px;
+    margin-top: 50px;
 }
 
 .event-title {
@@ -668,6 +669,12 @@ html, body {
     align-items: center;
     justify-content: center;
     margin-top: 10px;
+    border: none;
+}
+
+.alert_link {
+    text-decoration: none;
+    color: #4299e1;
 }
 
 /* current_event_popup end */

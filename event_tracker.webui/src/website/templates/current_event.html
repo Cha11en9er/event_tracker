@@ -7,17 +7,12 @@
     <div class="header-left">
         <h1>Event Tracker</h1>
     </div>
-
     <nav aria-label="breadcrumb" class="header-center">
         <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item active">
-                <a href="{{ url_for('schedule_menu.schedule') }}">
-                    Главная
-                </a>
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('schedule_menu.schedule') }}">Главная</a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-                    {{ data.event_name }}
-            </li>
+            <li class="breadcrumb-item active">{{ data.event_name }}</li>
         </ol>
     </nav>
     <div class="header-right">
@@ -29,12 +24,96 @@
 {% endblock %}
 
 {% block main %}
+<div class="container mt-5" id="current_event_main">
+    <div class="container mt-5" id="current_event_main">
+        <div class="card mb-3">
+            <div class="card-body text-start"> <!-- Изменено на text-start для выравнивания текста влево -->    
+                <h2 class="card-title">{{ data.event_name }}</h2>
+                <p class="card-text">Дата: {{ data.formatted_time }} Время: {{ data.event_time }}</p>
+                <p class="card-text">Тип: {{ data.event_type_name }}</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card mb-3">
+                    <div class="card-body event-description">
+                        <h5 class="card-title">Описание</h5>
+                        <p class="card-text">{{ data.description|safe }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="action-buttons_top">
+                            {% if data.event_participation == 'True' %}
+                                <button class="btn btn-outline-primary" onclick="unSubscribeToEvent(this)" 
+                                        data-user-id="{{ data.user_current_id }}" 
+                                        data-event-id="{{ data.event_id }}">
+                                    Отписаться
+                                </button>
+                            {% else %}
+                                <button class="btn btn-primary" onclick="subscribeToEvent(this)"
+                                        data-user-id="{{ data.user_current_id }}" 
+                                        data-event-id="{{ data.event_id }}">
+                                    Пойду
+                                </button>
+                            {% endif %}
+                            
+                            <button class="btn btn-outline-secondary" onclick="open_event_form()">
+                                Оповещать
+                            </button>
+                        </div>
+                        <div class="action-buttons_bottom">
+                            {% if data.user_role == 'Admin' %}
+                                <button class="btn btn-outline-primary" onclick="editEvent()">
+                                    Изменить
+                                </button>
+                                <form action="/delete_event" method="POST" class="d-inline"> 
+                                    <button class="btn btn-danger">Удалить</button>
+                                    <input type="hidden" name="delete_event_id" value="{{ data.event_id }}">
+                                    <input type="hidden" name="delete_event_name" value="{{ data.event_name }}">
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body participants">
+                        <h5 class="card-title">Участники</h5>
+                        <p class="card-text">Количество участников: {{ data.total_participants }}</p>
+                        <ul class="list-group">
+                            {% if data.participants is not none and data.participants|length > 0 and data.participants[0].fullname is not none %}
+                                {% for row in data.participants %}
+                                    <li class="list-group-item">
+                                        <a href="{{ url_for('user_page.user_page', user_id_from_form=row.user_id) }}">{{ row.fullname }}</a>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <li class="list-group-item">
+                                    В мероприятии ещё нет участников. Вы можете стать первым!
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для оповещений -->
 <div class="modal fade" id="event_popup" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="notificationForm" action="/send_notif" method="POST">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="notificationModalLabel">Выберите время оповещения</h5>
+                    <h5 class="modal-title">Выберите время оповещения</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="close_event_form()"></button>
                 </div>
                 <div class="modal-body">
@@ -55,19 +134,18 @@
                     <input type="hidden" name="notif_event_name" value="{{ data.event_name }}">
                     <input type="hidden" name="notif_user_id" value="{{ data.user_current_id }}">
                     <input type="hidden" name="notif_user_tg_id" value="{{ data.user_telegram_id }}">
-                    <input type="hidden" name="notif_time" id="notif_time"  value="">
+                    <input type="hidden" name="notif_time" id="notif_time" value="">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="close_event_form()">Закрыть</button>
-                    <button type="button" class="btn btn-primary" onclick="save_and_submit_notif()">
-                        Сохранить
-                    </button>
+                    <button type="button" class="btn btn-primary" onclick="save_and_submit_notif()">Сохранить</button>
+                    
                     {% if data.user_telegram_id == 'False' %}
-                        <div id="notification_result" class="alert" style="display: none; background-color: rgb(195, 34, 147);">
-                            Введите ваш телеграм id в <a class="btn_login" href="{{ url_for('user_page.user_page', user_id_from_form=data.user_current_id ) }}">Профиль</a>
+                        <div id="notification_result" class="alert alert-warning">
+                            Настройте отправку сообщений в &nbsp;<a href="{{ url_for('user_page.user_page', user_id_from_form=data.user_current_id ) }}" class="alert_link">Профиле</a>
                         </div>
                     {% else %}
-                        <div id="notification_result" class="alert" style="display: none; ">
+                        <div id="notification_result" class="alert alert-success" style="display: none;">
                             Мы вас оповестим
                         </div>
                     {% endif %}
@@ -76,101 +154,4 @@
         </div>
     </div>
 </div>
-
-<div class="container" id="current_event_main">
-    <div class="current_event_main">
-        <div class="row">
-            <div class="col-md-4">
-                <!-- Название мероприятия -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ data.event_name }}</h5>
-                    </div>
-                </div>
-
-                <!-- Дата, время, тип мероприятия -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title"></h5>
-                        <p class="card-text">Дата: {{ data.formatted_time }} Время: {{ data.event_time }}</p>
-                        <p class="card-text">Тип: {{ data.event_type_name }}</p>
-                    </div>
-                </div>
-
-                <!-- Подписчики -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Участники</h5>
-                        <p class="card-text">Количество участников: {{ data.total_participants }}</p>
-                    </div>
-                </div>
-
-                <!-- Удалить -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        {% if data.event_participation == 'True' %}
-                            <button class="btn btn-outline-secondary"
-                            onclick="unSubscribeToEvent(this)" 
-                            data-user-id="{{ data.user_current_id }}" 
-                            data-event-id="{{ data.event_id }}">
-                                Отписаться
-                            </button>
-                        {% else %}
-                            <button class="btn btn-outline-secondary"
-                            onclick="subscribeToEvent(this)" 
-                            data-user-id="{{ data.user_current_id }}" 
-                            data-event-id="{{ data.event_id }}">
-                                Учавстовать
-                            </button>
-                        {% endif %}
-                        <button class="btn btn-outline-secondary" onclick="open_event_form()">
-                            Оповещать
-                        </button>
-                        {% if data.user_role == 'Admin' %}
-                        <form action="/delete_event" method="POST"> 
-                            <button class="btn btn-danger">
-                                Удалить
-                            </button>
-                            <input type="hidden" name="delete_event_id" value="{{ data.event_id }}">
-                            <input type="hidden" name="delete_event_name" value="{{ data.event_name }}">
-                        </form>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-8">
-                <!-- Описание -->
-                <div class="card mb-3">
-                    <div class="card-body event-description">
-                        <h5 class="card-title">Описание</h5>
-                        <p class="card-text">
-                            {{ data.description|safe }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Участники -->
-                <div class="card mb-3">
-                    <div class="card-body participants">
-                        <h5 class="card-title">Участники</h5>
-                        <ul class="list-group">
-                            {% if data.participants is not none and data.participants|length > 0 and data.participants[0].fullname is not none %}
-                                {% for row in data.participants %}
-                                    <li class="list-group-item">
-                                        <a href="{{ url_for('user_page.user_page', user_id_from_form=row.user_id) }}">{{ row.fullname }}</a>
-                                    </li>
-                                {% endfor %}
-                            {% else %}
-                                <li class="list-group-item">
-                                    В мероприятии ещё нет участников. Вы можете стать первым!
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 {% endblock %}
