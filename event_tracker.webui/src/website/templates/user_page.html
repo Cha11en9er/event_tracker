@@ -70,10 +70,10 @@
                             </div>
                             <hr>
                             <div class="col-sm-3">
-                                <h6 class="mb-0">Уведомленя в Telegram  </h6>
+                                <h6 class="mb-0">Уведомленя в Telegram</h6>
                             </div>
                             <div class="col-sm-9 text-secondary" id="telegram_id">
-                                {{ user_data[0]['telegram_id'] }}
+                                <button class="btn btn-info" id="setupButton">Настроить</button>
                             </div>
                             <hr>
                             <div class="col-sm-3">
@@ -113,6 +113,39 @@
             </div>
         </div>
 
+    </div>
+</div>
+
+<!-- Модальное окно для редактирования профиля -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Настройка уведомлений</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ol class="list-group list-group-numbered">
+                    <li class="list-group-item">Начните диалог с нашим <a href="https://t.me/meet_notifications_bot" target="_blank"> телеграм ботом</a></li>
+                    <li class="list-group-item">Найдите id чата с помощью этого <a href="https://lumpics.ru/how-find-out-chat-id-in-telegram/" target="_blank">гайда</a>. <br> Желатеьно использовать первый пункт</li>
+                    <li class="list-group-item">
+                        Введите id в поле ниже и нажмите на кнопку "Проверить"
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="telegramIdInput" placeholder="Введите id">
+                            <button type="button" class="btn btn-primary" id="saveNotificationSettings">Проверить</button>
+                        </div>
+                        <div id="messageContainer" class="mt-2" style="display: none;">
+                            <div class="alert" role="alert"></div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">Если вам пришло уведомление, то всё настроено и можно закрыть окно</li>
+                </ol>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

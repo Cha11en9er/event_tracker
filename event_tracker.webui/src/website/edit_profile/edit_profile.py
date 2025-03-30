@@ -1,5 +1,6 @@
 from flask import request, Blueprint, jsonify, session
 import psycopg2, psycopg2.extras
+import requests
 
 edit_profile_blueprint = Blueprint('edit_profile', __name__)
 
@@ -42,3 +43,58 @@ def edit_profile():
         'email': updated_user_data['email'],
         'telegram_id': updated_user_data['telegram_id']
     })
+
+@edit_profile_blueprint.route('/verify_telegram_id', methods=['POST'])
+def verify_telegram_id():
+    try:
+        data = request.get_json()
+        chat_id = data.get('chat_id')
+        user_id = session.get('id')
+
+        if not chat_id or not user_id:
+            return jsonify({'success': False, 'message': 'Отсутствуют необходимые данные'})
+
+        connection = edit_profile_blueprint.db_connection()
+        cursor = connection.cursor()
+
+        # Проверяем, существует ли chat_id в таблице subscribe
+        cursor.execute("""
+            SELECT chat_id FROM evt.subscribe 
+            WHERE chat_id = %s
+        """, (chat_id,))
+        
+        if cursor.fetchone() is None:
+            return jsonify({'success': False, 'message': 'Введён некорекнтный id'})
+
+        # Обновляем telegram_id пользователя
+        cursor.execute("""
+            UPDATE evt."user"
+            SET telegram_id = %s
+            WHERE user_id = %s
+        """, (chat_id, user_id))
+
+        connection.commit()
+
+        # Обновляем telegram_id в сессии
+        session['telegram_id'] = chat_id
+
+        # Отправляем сообщение через бота
+        bot_token = edit_profile_blueprint.config['TG_BOT_TOKEN']
+        message = 'Отправка сообщений настроена, можете подключать уведомления на мероприятия'
+        url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
+        data = {
+            'chat_id': chat_id,
+            'text': message
+        }
+        response = requests.post(url, data=data)
+
+        if response.status_code == 200:
+            return jsonify({'success': True, 'message': 'Введён правильный id. Проверьте телеграм'})
+        else:
+            return jsonify({'success': False, 'message': 'Введён некорекнтный id'})
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': 'Введён некорекнтный id'})
+    finally:
+        if 'connection' in locals():
+            connection.close()
