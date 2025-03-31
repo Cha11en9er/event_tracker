@@ -31,25 +31,51 @@
         {% endblock %}
     </div>
 
-    <div class="main_main ">
+    <div class="main_main">
         {% block main %}
-            <div class="d-flex justify-content-center align-items-center vh-100 main_content">
-                    <h1 class="main_title">Event tracker</h1>
+            <div class="landing-page">
+                <div class="landing-content">
+                    <div class="features-container">
+                        <div class="logo-container">
+                            <img src="..\static\uploads\logo.png" alt="Event tracker лого">
+                        </div>
+                       
+                        <div class="feature-item" data-position="top">
+                            <h4>Централизованный учет активности</h4>
+                            <p>Все внерабочие мероприятия (конференции, хакатоны, менторство) в одной системе</p>
+                        </div>
 
-                    <h3>Приложение для учёта внерабочих активностей с возможностью уведомлений в телеграм</h>
+                        <div class="feature-item" data-position="right">
+                            <h4>Умные напоминания</h4>
+                            <p>Оповещения о грядущих событиях, чтобы ничего не пропустить.</p>
+                        </div>
 
-                    <div class="main_buttons">
-                        <input class="main_button" type="button" value="Вход" onclick="location.href='{{ url_for('auth.login') }}'">
-                        <input class="main_button" type="button" value="Регистрация" onclick="location.href='{{ url_for('auth.register') }}'">
+                        <div class="feature-item" data-position="bottom">
+                            <h4>Автоматизация отчетности</h4>
+                            <p>Легкий сбор данных через формы после ивентов и генерация аналитики для менеджеров.</p>
+                        </div>
+
+                        <div class="feature-item" data-position="left">
+                            <h4>Прозрачность для команды</h4>
+                            <p>Видимость участия коллег: кто спикер, ментор или участник.</p>
+                        </div>
                     </div>
 
+                    <div class="landing-header">
+                        <h1 class="main_title">Event tracker</h1>
+                        <h3 class="main_subtitle">Приложение для учёта внерабочих активностей с возможностью уведомлений в телеграм</h3>
+                        <div class="main_buttons">
+                            <a href="{{ url_for('auth.login') }}" class="main_button">Вход</a>
+                            <a href="{{ url_for('auth.register') }}" class="main_button">Регистрация</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         {% endblock %}
     </div>
 
     <script src="{{ url_for('static', filename='js/subscribe.js') }}"></script>
     <script src="{{ url_for('static', filename='js/schedule_form.js') }}"></script>
-    <!-- <script src="{{ url_for('static', filename='js/schedule.js') }}"></script> -->
     <script src="{{ url_for('static', filename='js/flash-message.js') }}"></script>
     <script src="{{ url_for('static', filename='js/edit_profile.js') }}"></script>
     <script src="{{ url_for('static', filename='js/current_event_popup.js') }}"></script>

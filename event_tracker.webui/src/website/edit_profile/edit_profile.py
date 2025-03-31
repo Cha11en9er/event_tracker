@@ -44,6 +44,7 @@ def edit_profile():
         'telegram_id': updated_user_data['telegram_id']
     })
 
+
 @edit_profile_blueprint.route('/verify_telegram_id', methods=['POST'])
 def verify_telegram_id():
     try:

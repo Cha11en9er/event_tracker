@@ -25,84 +25,82 @@
 
 {% block main %}
 <div class="container mt-5" id="current_event_main">
-    <div class="container mt-5" id="current_event_main">
-        <div class="card mb-3">
-            <div class="card-body text-start"> <!-- Изменено на text-start для выравнивания текста влево -->    
-                <h2 class="card-title">{{ data.event_name }}</h2>
-                <p class="card-text">Дата: {{ data.formatted_time }} Время: {{ data.event_time }}</p>
-                <p class="card-text">Тип: {{ data.event_type_name }}</p>
+    <div class="card mb-3">
+        <div class="card-body text-start">
+            <h2 class="card-title">{{ data.event_name }}</h2>
+            <p class="card-text">Дата: {{ data.formatted_time }} Время: {{ data.event_time }}</p>
+            <p class="card-text">Тип: {{ data.event_type_name }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card mb-3">
+                <div class="card-body event-description">
+                    <h5 class="card-title">Описание</h5>
+                    <p class="card-text">{{ data.description|safe }}</p>
+                </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-7">
-                <div class="card mb-3">
-                    <div class="card-body event-description">
-                        <h5 class="card-title">Описание</h5>
-                        <p class="card-text">{{ data.description|safe }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-5">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="action-buttons_top">
+        <div class="col-md-5">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="action-buttons">
+                        <div class="action-buttons__main">
                             {% if data.event_participation == 'True' %}
-                                <button class="btn btn-outline-primary" onclick="unSubscribeToEvent(this)" 
+                                <button class="btn btn-primary w-100 mb-2" onclick="unSubscribeToEvent(this)" 
                                         data-user-id="{{ data.user_current_id }}" 
                                         data-event-id="{{ data.event_id }}">
-                                    Отписаться
+                                    Я пойду
                                 </button>
                             {% else %}
-                                <button class="btn btn-primary" onclick="subscribeToEvent(this)"
+                                <button class="btn btn-primary w-100 mb-2" onclick="subscribeToEvent(this)"
                                         data-user-id="{{ data.user_current_id }}" 
                                         data-event-id="{{ data.event_id }}">
                                     Пойду
                                 </button>
                             {% endif %}
                             
-                            <button class="btn btn-outline-secondary" onclick="open_event_form()">
+                            <button class="btn btn-outline-secondary w-100" onclick="open_event_form()">
                                 Оповещать
                             </button>
                         </div>
-                        <div class="action-buttons_bottom">
-                            {% if data.user_role == 'Admin' %}
-                                <button class="btn btn-outline-primary" onclick="editEvent()">
-                                    Изменить
-                                </button>
-                                <form action="/delete_event" method="POST" class="d-inline"> 
-                                    <button class="btn btn-danger">Удалить</button>
-                                    <input type="hidden" name="delete_event_id" value="{{ data.event_id }}">
-                                    <input type="hidden" name="delete_event_name" value="{{ data.event_name }}">
-                                </form>
-                            {% endif %}
+
+                        {% if data.user_role == 'Admin' %}
+                        <div class="action-buttons__admin mt-3">
+                            <button class="btn btn-outline-primary" onclick="editEvent()">
+                                Изменить
+                            </button>
+                            <form action="/delete_event" method="POST" class="d-inline"> 
+                                <button class="btn btn-danger">Удалить</button>
+                                <input type="hidden" name="delete_event_id" value="{{ data.event_id }}">
+                                <input type="hidden" name="delete_event_name" value="{{ data.event_name }}">
+                            </form>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-body participants">
-                        <h5 class="card-title">Участники</h5>
-                        <p class="card-text">Количество участников: {{ data.total_participants }}</p>
-                        <ul class="list-group">
-                            {% if data.participants is not none and data.participants|length > 0 and data.participants[0].fullname is not none %}
-                                {% for row in data.participants %}
-                                    <li class="list-group-item">
-                                        <a href="{{ url_for('user_page.user_page', user_id_from_form=row.user_id) }}">{{ row.fullname }}</a>
-                                    </li>
-                                {% endfor %}
-                            {% else %}
-                                <li class="list-group-item">
-                                    В мероприятии ещё нет участников. Вы можете стать первым!
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
-
             </div>
 
+            <div class="card">
+                <div class="card-body participants">
+                    <h5 class="card-title">Участники {{ data.total_participants }}</h5>
+                    <ul class="list-group">
+                        {% if data.participants is not none and data.participants|length > 0 and data.participants[0].fullname is not none %}
+                            {% for row in data.participants %}
+                                <li class="list-group-item">
+                                    <a href="{{ url_for('user_page.user_page', user_id_from_form=row.user_id) }}">{{ row.fullname }}</a>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">
+                                В мероприятии ещё нет участников. Вы можете стать первым!
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>

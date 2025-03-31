@@ -131,7 +131,11 @@
                     <li class="list-group-item">
                         Введите id в поле ниже и нажмите на кнопку "Проверить"
                         <div class="input-group">
+                            {% if user_data[0]['telegram_id'] == None %}
                             <input type="text" class="form-control" id="telegramIdInput" placeholder="Введите id">
+                            {% else %}
+                            <input type="text" class="form-control" id="telegramIdInput" placeholder="Ваш id чата: {{ user_data[0]['telegram_id'] }}">
+                            {% endif %}
                             <button type="button" class="btn btn-primary" id="saveNotificationSettings">Проверить</button>
                         </div>
                         <div id="messageContainer" class="mt-2" style="display: none;">
