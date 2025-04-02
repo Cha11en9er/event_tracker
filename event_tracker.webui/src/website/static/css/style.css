@@ -397,7 +397,6 @@ body {
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    margin-top: 100px;
     margin-bottom: 30px;
     width: 100%;
     max-width: 1200px;
@@ -732,6 +731,11 @@ body {
     margin-bottom: 1rem;
 }
 
+.form-group.d-flex {
+    display: flex;
+    align-items: center;
+}
+
 .form-control, .form-select {
     width: 100%;
     padding: 0.75rem 1rem;
@@ -744,6 +748,15 @@ body {
 .form-control:focus, .form-select:focus {
     border-color: #0066FF;
     outline: none;
+}
+
+.form-control.w-50,
+.form-select.w-50 {
+    width: 50%;
+}
+
+.ms-2 {
+    margin-left: 0.5rem;
 }
 
 .submit-button {
