@@ -1,0 +1,155 @@
+{% extends 'main.html' %}
+
+{% block title %} {{ data.event_name }} {% endblock %}
+
+{% block header %}
+<div class="header">
+    <div class="header-left">
+        <h1>Event Tracker</h1>
+    </div>
+    <nav aria-label="breadcrumb" class="header-center">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('schedule_menu.schedule') }}">Главная</a>
+            </li>
+            <li class="breadcrumb-item active">{{ data.event_name }}</li>
+        </ol>
+    </nav>
+    <div class="header-right">
+        <div class="user-circle" onclick="location.href='{{ url_for('user_page.user_page', user_id_from_form=data.current_user_role_id ) }}'">
+            U
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block main %}
+<div class="container mt-5" id="current_event_main">
+    <div class="card mb-3">
+        <div class="card-body text-start">
+            <h2 class="card-title">{{ data.event_name }}</h2>
+            <p class="card-text">Дата: {{ data.formatted_time }} Время: {{ data.event_time }}</p>
+            <p class="card-text">Тип: {{ data.event_type_name }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card mb-3">
+                <div class="card-body event-description">
+                    <h5 class="card-title">Описание</h5>
+                    <p class="card-text">{{ data.description|safe }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="action-buttons">
+                        <div class="action-buttons__main">
+                            {% if data.event_participation == 'True' %}
+                                <button class="btn btn-primary w-100 mb-2" onclick="unSubscribeToEvent(this)" 
+                                        data-user-id="{{ data.user_current_id }}" 
+                                        data-event-id="{{ data.event_id }}">
+                                    Я пойду
+                                </button>
+                            {% else %}
+                                <button class="btn btn-primary w-100 mb-2" onclick="subscribeToEvent(this)"
+                                        data-user-id="{{ data.user_current_id }}" 
+                                        data-event-id="{{ data.event_id }}">
+                                    Пойду
+                                </button>
+                            {% endif %}
+                            
+                            <button class="btn btn-outline-secondary w-100" onclick="open_event_form()">
+                                Оповещать
+                            </button>
+                        </div>
+
+                        {% if data.user_role == 'Admin' %}
+                        <div class="action-buttons__admin mt-3">
+                            <button class="btn btn-outline-primary" onclick="editEvent()">
+                                Изменить
+                            </button>
+                            <form action="/delete_event" method="POST" class="d-inline"> 
+                                <button class="btn btn-danger">Удалить</button>
+                                <input type="hidden" name="delete_event_id" value="{{ data.event_id }}">
+                                <input type="hidden" name="delete_event_name" value="{{ data.event_name }}">
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body participants">
+                    <h5 class="card-title">Участники {{ data.total_participants }}</h5>
+                    <ul class="list-group">
+                        {% if data.participants is not none and data.participants|length > 0 and data.participants[0].fullname is not none %}
+                            {% for row in data.participants %}
+                                <li class="list-group-item">
+                                    <a href="{{ url_for('user_page.user_page', user_id_from_form=row.user_id) }}">{{ row.fullname }}</a>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">
+                                В мероприятии ещё нет участников. Вы можете стать первым!
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для оповещений -->
+<div class="modal fade" id="event_popup" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="notificationForm" action="/send_notif" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title">Выберите время оповещения</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="close_event_form()"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="notificationTime" id="15min" value="15" onclick="updateNotificationTime(15)">
+                        <label class="form-check-label" for="15min">15 минут</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="notificationTime" id="30min" value="30" onclick="updateNotificationTime(30)">
+                        <label class="form-check-label" for="30min">30 минут</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="notificationTime" id="60min" value="60" onclick="updateNotificationTime(60)">
+                        <label class="form-check-label" for="60min">1 час</label>
+                    </div>
+
+                    <input type="hidden" name="notif_event_date" value="{{ data.event_date }}">
+                    <input type="hidden" name="notif_event_name" value="{{ data.event_name }}">
+                    <input type="hidden" name="notif_user_id" value="{{ data.user_current_id }}">
+                    <input type="hidden" name="notif_user_tg_id" value="{{ data.user_telegram_id }}">
+                    <input type="hidden" name="notif_time" id="notif_time" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="close_event_form()">Закрыть</button>
+                    <button type="button" class="btn btn-primary" onclick="save_and_submit_notif()">Сохранить</button>
+                    
+                    {% if data.user_telegram_id == 'False' %}
+                        <div id="notification_result" class="alert alert-warning">
+                            Настройте отправку сообщений в &nbsp;<a href="{{ url_for('user_page.user_page', user_id_from_form=data.user_current_id ) }}" class="alert_link">Профиле</a>
+                        </div>
+                    {% else %}
+                        <div id="notification_result" class="alert alert-success" style="display: none;">
+                            Мы вас оповестим
+                        </div>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

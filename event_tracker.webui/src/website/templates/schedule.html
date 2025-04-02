@@ -1,0 +1,152 @@
+{% extends 'main.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block header %}
+<div class="header">
+    <div class="header-left">
+        <h1>Event Tracker</h1>
+    </div>
+    <div class="header-center">
+        <span>Главная</span>
+    </div>
+    <div class="header-right">
+        <div class="user-circle" onclick="location.href='{{ url_for('user_page.user_page', user_id_from_form=user_data ) }}'">
+            U
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block main %}
+<div class="form_popup" id="form_popup">
+    <form class="form_container" id="schedule_form" action="/create_event" method="POST" onsubmit="return validateForm()">
+        <div class="form_data">
+            <div class="form_header">
+                <h1>Информация о событии</h1>
+                <button type="button" class="close-button" onclick="close_form()">×</button>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="date" name="event_date" placeholder="Дата события" id="event_date">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="time" name="event_time" placeholder="Время события" id="event_time">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="event_name" placeholder="Название события">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="event_description" placeholder="Описание события">
+            </div>
+            <div class="form-group">
+                <select name="event_type_selection" class="form-select">
+                    <option value="" disabled selected>Выберите тип события</option>
+                    {% for row in event_type %}
+                        <option value="{{ row[0] }}">{{ row[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="submit-button">Добавить событие</button>
+        </div>
+        <div class="error_messages" id="error_messages"></div>
+    </form>
+</div>
+
+<div class="welcome-section">
+    <div class="welcome-text">
+        <h2>Здесь показаны все мероприятия, происходящие в жизни компании. Выберите то, которое вам по душе.</h2>
+        <p>Не можете найти? Мы поможем!</p>
+    </div>
+    <div class="welcome-actions">
+        <form id="search-form" method="GET" action="/schedule">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Поиск событий..." name="search_info" value="{{ search_info }}">
+                <button type="submit" class="search-button">Найти</button>
+            </div>
+        </form>
+        <button class="create-button" type="button" onclick="open_form()">
+            Создать событие
+        </button>
+    </div>
+</div>
+
+<div class="content-section">
+    <div class="content-grid">
+        <div class="main-content">
+            <div class="table-container">
+                <table class="events-table">
+                    <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Описание</th>
+                            <th>Дата</th>
+                            <th>Вид мероприятия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if no_results %}
+                            <tr>
+                                <td colspan="4" class="text-center">Мероприятий с названием или описанием "{{ search_info }}" не найдено</td>
+                            </tr>
+                        {% else %}
+                            {% for event in events %}
+                                <tr class="event-row" onclick="location.href='{{ url_for('current_event.current_event', event_id_from_schedule=event.event_id ) }}'">
+                                    <td>{{ event.event_name }}</td>
+                                    <td>{{ event.description }}</td>
+                                    <td>{{ event.formatted_time }}</td>
+                                    <td>{{ event.event_type_name }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="pagination">
+                {% if total_pages > 1 %}
+                    {% for page_num in range(1, total_pages + 1) %}
+                        <a href="/schedule?page={{ page_num }}&search_info={{ search_info }}" 
+                           class="pagination-button {% if page_num == current_page %}active{% endif %}">
+                            {{ page_num }}
+                        </a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="side-content">
+            <div class="calendar-container">
+                <h3>Календарь событий</h3>
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-nav">&lt;</button>
+                        <span class="current-month">Март 2024</span>
+                        <button class="calendar-nav">&gt;</button>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="weekday">Пн</div>
+                        <div class="weekday">Вт</div>
+                        <div class="weekday">Ср</div>
+                        <div class="weekday">Чт</div>
+                        <div class="weekday">Пт</div>
+                        <div class="weekday">Сб</div>
+                        <div class="weekday">Вс</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="past-events">
+                <h3>Прошедшие события</h3>
+                <div class="past-events-list">
+                    {% for event in past_events %}
+                    <div class="past-event-item">
+                        <div class="past-event-name">{{ event.event_name }}</div>
+                        <div class="past-event-date">{{ event.formatted_time }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

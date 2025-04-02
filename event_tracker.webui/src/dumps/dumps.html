@@ -1,0 +1,180 @@
+<div class="event-page">
+    <!-- Шапка события -->
+    <div class="event-header">
+      <h1 class="event-title">1 апреля никому не верю</h1>
+      <div class="event-meta">
+        <span class="event-date">📅 1 Апрель, 10:10</span>
+        <span class="event-type">🎭 Юмор</span>
+      </div>
+    </div>
+  
+    <!-- Основной контент в две колонки -->
+    <div class="event-content">
+      <!-- Левая колонка (60%) -->
+      <div class="event-description">
+        <h2>Описание</h2>
+        <div class="description-text">
+          <p>Веселое мероприятие с шутками и розыгрышами. Приходите с хорошим настроением и готовностью к неожиданностям! Мы подготовили:</p>
+          <ul>
+            <li>Конкурс на лучшую шутку</li>
+            <li>Розыгрыш призов</li>
+            <li>Квест с неожиданными поворотами</li>
+          </ul>
+        </div>
+      </div>
+  
+      <!-- Правая колонка (40%) -->
+      <div class="event-sidebar">
+        <!-- Блок действий -->
+        <div class="action-panel">
+          <button class="btn primary">Я пойду</button>
+          <button class="btn secondary">Оповестить друзей</button>
+          <div class="admin-actions">
+            <button class="btn icon edit">✏️ Редактировать</button>
+            <button class="btn icon delete">🗑️ Удалить</button>
+          </div>
+        </div>
+  
+        <!-- Блок участников -->
+        <div class="participants-panel">
+          <h3>Участники <span class="count">0</span></h3>
+          <div class="empty-state">
+            <p>В мероприятии ещё нет участников.</p>
+            <p>Вы можете стать первым!</p>
+          </div>
+          <div class="participants-list" style="display: none;">
+            <!-- Здесь будет список участников -->
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<style>
+    .event-page {
+  max-width: 1200px;
+  margin: 30px auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.event-header {
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.event-title {
+  font-size: 32px;
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+}
+
+.event-meta {
+  display: flex;
+  gap: 20px;
+  color: #7f8c8d;
+  font-size: 16px;
+}
+
+.event-content {
+  display: flex;
+  gap: 30px;
+}
+
+.event-description {
+  flex: 0 0 60%;
+}
+
+.event-sidebar {
+  flex: 0 0 40%;
+}
+
+.description-text {
+  line-height: 1.6;
+  color: #34495e;
+}
+
+.description-text ul {
+  padding-left: 20px;
+}
+
+.action-panel {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.btn.primary {
+  background: #4a6fa5;
+  color: white;
+}
+
+.btn.secondary {
+  background: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.admin-actions {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.btn.icon {
+  background: transparent;
+  color: #666;
+  text-align: left;
+  padding: 8px 0;
+  margin-bottom: 5px;
+}
+
+.participants-panel {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.participants-panel h3 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.count {
+  color: #4a6fa5;
+  font-weight: bold;
+}
+
+.empty-state {
+  color: #7f8c8d;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 14px;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .event-content {
+    flex-direction: column;
+  }
+  
+  .event-description,
+  .event-sidebar {
+    flex: 1 1 100%;
+  }
+}
+</style>
