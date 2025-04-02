@@ -52,7 +52,7 @@ function renderTable() {
 
     paginatedData.forEach(function(item) {
         var row = $('<tr class="table_row"></tr>').click(function() {
-            window.location.href = '/current_event/' + item.event_id + '?date=' + item.event_date + '&datetime=' + item.datetime + '&time=' + item.event_time + '&name=' + encodeURIComponent(item.event_name) + '&disc=' + encodeURIComponent(item.event_disc);
+            window.location.href = '/current_event/' + item.event_id + '?date=' + item.event_date + '&datetime=' + item.datetime + '&time=' + item.event_start_time + '&name=' + encodeURIComponent(item.event_name) + '&disc=' + encodeURIComponent(item.event_disc);
         });
         row.append($('<td></td>').text(item.event_name));
         row.append($('<td class="disc_row"></td>').text(item.event_disc));

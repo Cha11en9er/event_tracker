@@ -28,7 +28,7 @@
     <div class="card mb-3">
         <div class="card-body text-start">
             <h2 class="card-title">{{ data.event_name }}</h2>
-            <p class="card-text">Дата: {{ data.formatted_time }} Время: {{ data.event_time }}</p>
+            <p class="card-text">Дата: {{ data.formatted_time }} Время: {{ data.event_start_time }} - {{ data.event_end_time }}</p>
             <p class="card-text">Тип: {{ data.event_type_name }}</p>
         </div>
     </div>
@@ -132,6 +132,7 @@
                     <input type="hidden" name="notif_event_name" value="{{ data.event_name }}">
                     <input type="hidden" name="notif_user_id" value="{{ data.user_current_id }}">
                     <input type="hidden" name="notif_user_tg_id" value="{{ data.user_telegram_id }}">
+                    <input type="hidden" name="notif_event_id" value="{{ data.event_id }}">
                     <input type="hidden" name="notif_time" id="notif_time" value="">
                 </div>
                 <div class="modal-footer">

@@ -19,38 +19,7 @@
 {% endblock %}
 
 {% block main %}
-<div class="form_popup" id="form_popup">
-    <form class="form_container" id="schedule_form" action="/create_event" method="POST" onsubmit="return validateForm()">
-        <div class="form_data">
-            <div class="form_header">
-                <h1>Информация о событии</h1>
-                <button type="button" class="close-button" onclick="close_form()">×</button>
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="date" name="event_date" placeholder="Дата события" id="event_date">
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="time" name="event_time" placeholder="Время события" id="event_time">
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="text" name="event_name" placeholder="Название события">
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="text" name="event_description" placeholder="Описание события">
-            </div>
-            <div class="form-group">
-                <select name="event_type_selection" class="form-select">
-                    <option value="" disabled selected>Выберите тип события</option>
-                    {% for row in event_type %}
-                        <option value="{{ row[0] }}">{{ row[1] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button type="submit" class="submit-button">Добавить событие</button>
-        </div>
-        <div class="error_messages" id="error_messages"></div>
-    </form>
-</div>
+
 
 <div class="welcome-section">
     <div class="welcome-text">
@@ -86,7 +55,7 @@
                     <tbody>
                         {% if no_results %}
                             <tr>
-                                <td colspan="4" class="text-center">Мероприятий с названием или описанием "{{ search_info }}" не найдено</td>
+                                <td colspan="5" class="text-center">{{ no_events_message }}</td>
                             </tr>
                         {% else %}
                             {% for event in events %}
@@ -148,5 +117,45 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="form_popup" id="form_popup">
+    <form class="form_container" id="schedule_form" action="/create_event" method="POST" onsubmit="return validateForm()">
+        <div class="form_data">
+            <div class="form_header">
+                <h1>Информация о событии</h1>
+                <button type="button" class="close-button" onclick="close_form()">×</button>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="date" name="event_date" placeholder="Дата события" id="event_date">
+            </div>
+            <div class="form-group d-flex">
+                <input class="form-control w-50" type="time" name="event_time" placeholder="Время события" id="event_time">
+                <select class="form-select w-50 ms-2" name="event_duration" id="event_duration">
+                    <option value="" disabled selected>Продолжительность</option>
+                    <option value="15 минут">15 минут</option>
+                    <option value="30 минут">30 минут</option>
+                    <option value="1 час">1 час</option>
+                    <option value="2 часа">2 часа</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="event_name" placeholder="Название события">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="event_description" placeholder="Описание события">
+            </div>
+            <div class="form-group">
+                <select name="event_type_selection" class="form-select">
+                    <option value="" disabled selected>Выберите тип события</option>
+                    {% for row in event_type %}
+                        <option value="{{ row[0] }}">{{ row[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="submit-button">Добавить событие</button>
+        </div>
+        <div class="error_messages" id="error_messages"></div>
+    </form>
 </div>
 {% endblock %}

@@ -25,6 +25,16 @@ def schedule():
         ''')
         event_types = cursor.fetchall()
 
+        # Проверяем наличие будущих событий в таблице
+        cursor.execute('''
+            SELECT EXISTS (
+                SELECT 1 
+                FROM evt.event 
+                WHERE event_date >= CURRENT_DATE
+            );
+        ''')
+        has_future_events = cursor.fetchone()[0]
+
         # Получаем активные события (будущие)
         cursor.execute('''
             SELECT json_agg(subquery)
@@ -35,7 +45,8 @@ def schedule():
                     COALESCE(e.description, 'нету описания') AS description,
                     COALESCE(et.event_type_name, 'нет типа') AS event_type_name,
                     e.event_id,
-                    e.event_time
+                    e.event_start_time,
+                    e.event_end_time
                 FROM
                     evt.event AS e
                 LEFT JOIN
@@ -76,6 +87,8 @@ def schedule():
         cursor.close()
         connection.close()
 
+        print(active_events)
+        
         # Форматирование даты
         def format_date(date_str):
             date_obj = datetime.fromisoformat(date_str)
@@ -102,6 +115,14 @@ def schedule():
         for event in past_events:
             event['formatted_time'] = format_date(event['event_date'])
 
+        # Определяем сообщение в зависимости от ситуации
+        if not has_future_events:
+            no_events_message = "Будущих мероприятий нету"
+        elif search_info and not active_events:
+            no_events_message = f'Мероприятий с названием или описанием "{search_info}" не найдено'
+        else:
+            no_events_message = None
+
         return render_template('schedule.html', 
                              events=paginated_data, 
                              past_events=past_events,
@@ -110,6 +131,7 @@ def schedule():
                              search_info=search_info, 
                              user_data=user_data, 
                              no_results=not active_events,
+                             no_events_message=no_events_message,
                              event_type=event_types)
 
     return render_template('schedule.html', 
@@ -119,4 +141,5 @@ def schedule():
                          current_page=1, 
                          search_info='', 
                          no_results=True,
+                         no_events_message="Будущих мероприятий нету",
                          event_type=[])

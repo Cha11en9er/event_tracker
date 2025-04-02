@@ -14,18 +14,19 @@ def send_notif():
     notif_event_name = request.form['notif_event_name']
     notif_user_id = request.form['notif_user_id']
     notif_user_tg_id = request.form['notif_user_tg_id']
+    notif_event_id = int(request.form['notif_event_id'])
     notif_time = int(request.form['notif_time'])
 
-    def write_notif_record(user_id, telegram_id, event_datetime, selected_time, counted_time, event_name):
+    def write_notif_record(notif_user_id, notif_user_tg_id, datetime_event_date, notif_time, counted_event_time, notif_event_name, notif_event_id):
         connection = send_notif_blueprint.db_connection()
         cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         cursor.execute("""
                         INSERT INTO
                             evt.notification
-                        (notification_id, user_id, user_telegram_id, event_date, notif_user_time, notif_time, notif_status, event_name)
-                        VALUES (default, %s, %s, %s, %s, %s::timestamp without time zone, %s, %s)
-                        """, (user_id, telegram_id, event_datetime, selected_time, counted_time, 'Active', event_name))
+                        (notification_id, user_id, user_telegram_id, event_date, notif_user_time, notif_time, notif_status, event_name, event_id)
+                        VALUES (default, %s, %s, %s, %s, %s::timestamp without time zone, %s, %s, %s)
+                        """, (notif_user_id, notif_user_tg_id, datetime_event_date, notif_time, counted_event_time, 'Active', notif_event_name, notif_event_id))
         
         connection.commit() 
         cursor.close() 
@@ -34,7 +35,7 @@ def send_notif():
     datetime_event_date = datetime.fromisoformat(notif_event_date)
     counted_event_time = datetime_event_date - timedelta(minutes=notif_time)
 
-    write_notif_record(notif_user_id, notif_user_tg_id, datetime_event_date, notif_time, counted_event_time, notif_event_name)
+    write_notif_record(notif_user_id, notif_user_tg_id, datetime_event_date, notif_time, counted_event_time, notif_event_name, notif_event_id)
 
     return jsonify({"status": "success", "message": "Notification sent!"})
 
