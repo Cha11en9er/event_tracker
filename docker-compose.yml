@@ -10,8 +10,6 @@ services:
       - FLASK_APP=event_tracker.webui
       - FLASK_ENV=production
       - SECRET_KEY=${SECRET_KEY}
-    depends_on:
-      - db
     restart: unless-stopped
     networks:
       - app-network
