@@ -1,1 +1,0 @@
-start "" "C:\repos\event_tracker\event_tracker.webui\src\venv\Scripts\python.exe" "C:\repos\event_tracker\event_tracker.webui\src\website\send_notif\send_notif.py"

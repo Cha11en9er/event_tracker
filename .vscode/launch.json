@@ -8,7 +8,7 @@
             "type": "msedge",
             "request": "launch",
             "name": "Open event.html",
-            "file": "c:\\repos\\event_tracker\\event_tracker.webui\\src\\dumps\\event.html"
+            "file": "c:\\repos\\event_tracker\\event_tracker_webui\\src\\dumps\\event.html"
         }
     ]
 }
