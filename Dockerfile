@@ -14,10 +14,16 @@ RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
 
 # Переменные окружения
-ENV FLASK_APP=event_tracker.webui
+ENV FLASK_APP=app
 ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONPATH=/app
+
+# Установка curl для проверки здоровья
+USER root
+RUN apt-get update && apt-get install -y curl
+USER appuser
 
 # Порт для Gunicorn
 EXPOSE 8082
@@ -39,4 +45,4 @@ accesslog = "-"\n\
 access_log_format = "%({X-Forwarded-For}i)s %(l)s %(u)s %(t)s \"%(r)s\" %(s)s %(b)s \"%(f)s\" \"%(a)s\" %(T)s"' > gunicorn.conf.py
 
 # Запуск приложения через Gunicorn
-CMD ["gunicorn", "--config", "gunicorn.conf.py", "event_tracker.webui.src.app:app"] 
+CMD ["gunicorn", "--config", "gunicorn.conf.py", "app:app"] 
