@@ -9,11 +9,11 @@ services:
       - "8082:8082"
     environment:
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_NAME}
-      - FLASK_APP=event_tracker.webui.src.app
+      - FLASK_APP=app
       - FLASK_ENV=production
       - SECRET_KEY=${SECRET_KEY}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8082/"]
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
       interval: 30s
       timeout: 10s
       retries: 3
