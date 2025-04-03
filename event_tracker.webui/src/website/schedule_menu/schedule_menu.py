@@ -3,7 +3,7 @@ import psycopg2, psycopg2.extras
 from datetime import datetime
 import locale
 
-locale.setlocale(locale.LC_TIME, 'Russian_Russia.1251')
+locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
 schedule_menu_blueprint = Blueprint('schedule_menu', __name__)
 
 @schedule_menu_blueprint.route('/schedule', methods=['GET'])
