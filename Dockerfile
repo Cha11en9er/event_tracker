@@ -39,4 +39,4 @@ accesslog = "-"\n\
 access_log_format = "%({X-Forwarded-For}i)s %(l)s %(u)s %(t)s \"%(r)s\" %(s)s %(b)s \"%(f)s\" \"%(a)s\" %(T)s"' > gunicorn.conf.py
 
 # Запуск приложения через Gunicorn
-CMD ["gunicorn", "--config", "gunicorn.conf.py", "event_tracker.webui:app"] 
+CMD ["gunicorn", "--config", "gunicorn.conf.py", "event_tracker.webui.src.app:app"] 
