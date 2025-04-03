@@ -28,6 +28,9 @@ USER appuser
 # Порт для Gunicorn
 EXPOSE 8082
 
+# Создание директории для логов
+RUN mkdir -p logs
+
 # Создание файла конфигурации Gunicorn
 RUN echo 'import multiprocessing\n\
 bind = "0.0.0.0:8082"\n\
