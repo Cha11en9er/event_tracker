@@ -1,4 +1,3 @@
-
 function open_event_form() {
     document.getElementById('current_event_main').classList.add('blur');
     const formPopup = new bootstrap.Modal(document.getElementById('event_popup'));
@@ -71,4 +70,23 @@ function unSubscribeToEvent(button) {
         method: 'POST',
         body: formData
     })
+}
+
+function finishEvent(eventId) {
+    if (confirm('Вы уверены, что хотите завершить мероприятие?')) {
+        fetch('/finish_event', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ event_id: eventId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Мероприятие завершено');
+                location.reload();
+            }
+        });
+    }
 }

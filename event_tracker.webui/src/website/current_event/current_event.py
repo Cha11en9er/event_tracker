@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, session
+from flask import render_template, Blueprint, session, request, jsonify
 import psycopg2, psycopg2.extras
 from datetime import datetime
 
@@ -117,3 +117,31 @@ def current_event(event_id_from_schedule):
     print(event_data)
 
     return render_template('current_event.html', data = event_data)
+
+@current_event_blueprint.route('/finish_event', methods=['POST'])
+def finish_event():
+    if request.method == 'POST':
+        data = request.get_json()
+        event_id = data.get('event_id')
+        
+        print(f'Ивент {event_id} закончился')
+        
+        connection = current_event_blueprint.db_connection()
+        cursor = connection.cursor()
+        
+        try:
+            # Обновляем статус мероприятия
+            cursor.execute("""
+                UPDATE evt.event 
+                SET status = 'Finished' 
+                WHERE event_id = %s
+            """, (event_id,))
+            
+            connection.commit()
+            return jsonify({'success': True})
+        except Exception as e:
+            print(f"Ошибка при завершении мероприятия: {e}")
+            return jsonify({'success': False, 'error': str(e)})
+        finally:
+            cursor.close()
+            connection.close()

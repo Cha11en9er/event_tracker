@@ -72,6 +72,9 @@
                             <button class="btn btn-outline-primary" onclick="editEvent()">
                                 Изменить
                             </button>
+                            <button class="btn btn-warning" onclick="finishEvent({{ data.event_id }})">
+                                Завершить
+                            </button>
                             <form action="/delete_event" method="POST" class="d-inline"> 
                                 <button class="btn btn-danger">Удалить</button>
                                 <input type="hidden" name="delete_event_id" value="{{ data.event_id }}">
