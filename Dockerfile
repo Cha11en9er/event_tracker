@@ -6,12 +6,13 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     locales \
     && rm -rf /var/lib/apt/lists/* \
-    && localedef -i ru_RU -c -f CP1251 -A /usr/share/locale/locale.alias ru_RU.CP1251
+    && sed -i -e 's/# ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/' /etc/locale.gen \
+    && locale-gen
 
 # Set environment variables for locale
-ENV LANG ru_RU.CP1251
-ENV LANGUAGE ru_RU.CP1251
-ENV LC_ALL ru_RU.CP1251
+ENV LANG ru_RU.UTF-8
+ENV LANGUAGE ru_RU.UTF-8
+ENV LC_ALL ru_RU.UTF-8
 
 # Install Python dependencies
 COPY requirements.txt .
