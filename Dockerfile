@@ -7,7 +7,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY . .
+COPY event_tracker_webui/src /app
+
+# Set PYTHONPATH to include the app directory
+ENV PYTHONPATH=/app
 
 # Expose the port Gunicorn will run on
 EXPOSE 8000
