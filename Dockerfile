@@ -12,5 +12,5 @@ COPY . .
 # Expose the port Gunicorn will run on
 EXPOSE 8000
 
-# Run with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "120", "--worker-class", "eventlet", "website.app:app"] 
+# Run with Gunicorn using gevent worker
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "120", "--worker-class", "gevent", "website.app:app"] 
