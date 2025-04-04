@@ -2,7 +2,18 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install dependencies first for better layer caching
+# Install system dependencies including locale support
+RUN apt-get update && apt-get install -y \
+    locales \
+    && rm -rf /var/lib/apt/lists/* \
+    && localedef -i ru_RU -c -f CP1251 -A /usr/share/locale/locale.alias ru_RU.CP1251
+
+# Set environment variables for locale
+ENV LANG ru_RU.CP1251
+ENV LANGUAGE ru_RU.CP1251
+ENV LC_ALL ru_RU.CP1251
+
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
