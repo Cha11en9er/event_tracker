@@ -29,8 +29,15 @@
             <div class="form-group">
                 <input class="form-control" type="date" name="event_date" placeholder="Дата события" id="event_date">
             </div>
-            <div class="form-group">
-                <input class="form-control" type="time" name="event_time" placeholder="Время события" id="event_time">
+            <div class="form-group d-flex">
+                <input class="form-control w-50" type="time" name="event_time" placeholder="Время события" id="event_time">
+                <select class="form-select w-50 ms-2" name="event_duration" id="event_duration">
+                    <option value="" disabled selected>Продолжительность</option>
+                    <option value="15">15 минут</option>
+                    <option value="30">30 минут</option>
+                    <option value="60">1 час</option>
+                    <option value="120">2 часа</option>
+                </select>
             </div>
             <div class="form-group">
                 <input class="form-control" type="text" name="event_name" placeholder="Название события">
@@ -46,6 +53,7 @@
                     {% endfor %}
                 </select>
             </div>
+            <input type="hidden" name="event_creator_id" value="{{ user_data }}">
             <button type="submit" class="submit-button">Добавить событие</button>
         </div>
         <div class="error_messages" id="error_messages"></div>

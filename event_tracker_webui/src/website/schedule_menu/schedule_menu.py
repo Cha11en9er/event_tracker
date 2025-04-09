@@ -35,7 +35,7 @@ def schedule():
                     COALESCE(e.description, 'нету описания') AS description,
                     COALESCE(et.event_type_name, 'нет типа') AS event_type_name,
                     e.event_id,
-                    e.event_time
+                    e.event_duration
                 FROM
                     evt.event AS e
                 LEFT JOIN
@@ -78,9 +78,25 @@ def schedule():
 
         # Форматирование даты
         def format_date(date_str):
+            MONTHS = {
+                1: 'Января',
+                2: 'Февраля',
+                3: 'Марта',
+                4: 'Апреля',
+                5: 'Мая',
+                6: 'Июня',
+                7: 'Июля',
+                8: 'Августа',
+                9: 'Сентября',
+                10: 'Октября',
+                11: 'Ноября',
+                12: 'Декабря'
+            }
+            
             date_obj = datetime.fromisoformat(date_str)
             day = date_obj.day
-            month = date_obj.strftime('%B')
+            month = MONTHS[date_obj.month]
+            year = date_obj.year
             return f"{day} {month}"
 
         # Форматируем даты для активных событий
@@ -101,7 +117,7 @@ def schedule():
         # Форматируем даты для прошедших событий
         for event in past_events:
             event['formatted_time'] = format_date(event['event_date'])
-
+            
         return render_template('schedule.html', 
                              events=paginated_data, 
                              past_events=past_events,
