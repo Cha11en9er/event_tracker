@@ -13,6 +13,7 @@ from .delete_event.delete_event import delete_event_blueprint
 from .search_event.search_event import search_event_blueprint
 from .edit_profile.edit_profile import edit_profile_blueprint
 from .send_notif.send_notif import send_notif_blueprint
+from .end_event.end_event import end_event_blueprint
 
 load_dotenv()
 
@@ -40,7 +41,8 @@ def create_app():
         delete_event_blueprint,
         search_event_blueprint,
         edit_profile_blueprint,
-        send_notif_blueprint
+        send_notif_blueprint,
+        end_event_blueprint
     ]
 
     # Регистрация всех blueprint'ов и назначение функции подключения к БД

@@ -78,9 +78,10 @@
                                 <input type="hidden" name="delete_event_id" value="{{ data.event_id }}">
                                 <input type="hidden" name="delete_event_name" value="{{ data.event_name }}">
                             </form>
-                            <button class="btn btn-outline-primary w-100" onclick="editEvent()">
-                                Завершить
-                            </button>
+                            <form action="/end_event" method="POST" class="w-100"> 
+                                <button class="btn btn-outline-primary w-100">Завершить</button>
+                                <input type="hidden" name="event_id" value="{{ data.event_id }}">
+                            </form>
                         </div>
                         {% endif %}
                     </div>

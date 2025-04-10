@@ -25,7 +25,7 @@ def schedule():
         ''')
         event_types = cursor.fetchall()
 
-        # Получаем активные события (будущие)
+        # Получаем активные события (Future)
         cursor.execute('''
             SELECT json_agg(subquery)
             FROM (
@@ -42,14 +42,14 @@ def schedule():
                     evt.event_type AS et ON e.event_type_id = et.event_type_id
                 WHERE 
                     e.event_name ILIKE %s
-                    AND e.event_date >= CURRENT_DATE
+                    AND e.event_status = 'Future'
                 ORDER BY
                     e.event_date
             ) AS subquery;
         ''', ('%' + search_info + '%',))
         active_events = cursor.fetchone()[0]
 
-        # Получаем прошедшие события
+        # Получаем прошедшие события (Past)
         cursor.execute('''
             SELECT json_agg(subquery)
             FROM (
@@ -63,7 +63,7 @@ def schedule():
                 LEFT JOIN
                     evt.event_type AS et ON e.event_type_id = et.event_type_id
                 WHERE 
-                    e.event_date < CURRENT_DATE
+                    e.event_status = 'Past'
                 ORDER BY
                     e.event_date DESC
                 LIMIT 50
@@ -117,7 +117,8 @@ def schedule():
         # Форматируем даты для прошедших событий
         for event in past_events:
             event['formatted_time'] = format_date(event['event_date'])
-            
+        
+        print(paginated_data)
         return render_template('schedule.html', 
                              events=paginated_data, 
                              past_events=past_events,
