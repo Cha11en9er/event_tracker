@@ -99,8 +99,8 @@
                         {% else %}
                             {% for event in events %}
                                 <tr class="event-row" onclick="location.href='{{ url_for('current_event.current_event', event_id_from_schedule=event.event_id ) }}'">
-                                    <td>{{ event.event_name }}</td>
-                                    <td>{{ event.description }}</td>
+                                    <td>{{ event.event_name|truncate(30, True, '...')  }}</td>
+                                    <td>{{ event.description|truncate(70, True, '...')  }}</td>
                                     <td>{{ event.formatted_time }}</td>
                                     <td>{{ event.event_type_name }}</td>
                                 </tr>

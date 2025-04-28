@@ -19,7 +19,7 @@
             <div class="flash-messages">
                 {% for message in messages %}
                     <div class="flash-message">
-                        {{ message }}
+                        {{ message|truncate(50, True, '...') }}
                     </div>
                 {% endfor %}
             </div>

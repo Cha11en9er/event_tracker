@@ -20,13 +20,14 @@ def send_notif():
         connection = send_notif_blueprint.db_connection()
         cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        cursor.execute("""
-                        INSERT INTO
-                            evt.notification
-                        (notification_id, user_id, user_telegram_id, event_date, notif_user_time, notif_time, notif_status, event_name)
-                        VALUES (default, %s, %s, %s, %s, %s::timestamp without time zone, %s, %s)
-                        """, (user_id, telegram_id, event_datetime, selected_time, counted_time, 'Active', event_name))
+        # cursor.execute("""
+        #                 INSERT INTO
+        #                     evt.notification
+        #                 (notification_id, user_id, user_telegram_id, event_date, notif_user_time, notif_time, notif_status, event_name)
+        #                 VALUES (default, %s, %s, %s, %s, %s::timestamp without time zone, %s, %s)
+        #                 """, (user_id, telegram_id, event_datetime, selected_time, counted_time, 'Active', event_name))
         
+        print((user_id, telegram_id, event_datetime, selected_time, counted_time, 'Active', event_name))
         connection.commit() 
         cursor.close() 
         connection.close()

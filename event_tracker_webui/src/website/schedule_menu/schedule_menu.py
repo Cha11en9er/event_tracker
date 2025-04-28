@@ -15,7 +15,7 @@ def schedule():
         # Получаем параметры пагинации и поиска
         page = int(request.args.get('page', 1))
         search_info = request.args.get('search_info', '')
-        items_per_page = 6
+        items_per_page = 5
 
         # Получаем типы событий
         cursor.execute('''

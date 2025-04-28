@@ -12,7 +12,7 @@
             <li class="breadcrumb-item">
                 <a href="{{ url_for('schedule_menu.schedule') }}">Главная</a>
             </li>
-            <li class="breadcrumb-item active">{{ data.event_name }}</li>
+            <li class="breadcrumb-item active">{{ data.event_name|truncate(30, True, '...') }}</li>
         </ol>
     </nav>
     <div class="header-right">
@@ -27,7 +27,7 @@
 <div class="container mt-5" id="current_event_main">
     <div class="card mb-3">
         <div class="card-body text-start">
-            <h2 class="card-title">{{ data.event_name }}</h2>
+            <h2 class="card-title">{{ data.event_name|truncate(300, True, '...') }}</h2>
             <p class="card-text">Дата: {{ data.formatted_time }}</p>
             <p class="card-text">Время: {{ data.event_start_time }} - {{ data.event_end_time }}</p>
             <p class="card-text">Тип: {{ data.event_type_name }}</p>
@@ -138,6 +138,7 @@
                     <input type="hidden" name="notif_user_id" value="{{ data.user_current_id }}">
                     <input type="hidden" name="notif_user_tg_id" value="{{ data.user_telegram_id }}">
                     <input type="hidden" name="notif_time" id="notif_time" value="">
+                    <input type="hidden" name="notif_event_id" value="{{ data.event_id }}">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="close_event_form()">Закрыть</button>
