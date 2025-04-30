@@ -12,7 +12,7 @@ load_dotenv()
 
 app = Flask(__name__)
 socketio = SocketIO(app)
-app.secret_key = 'cairocoders-ednalan'
+app.secret_key = os.getenv('SECRET_KEY')
 
 env_host=os.getenv('DB_HOST')
 env_port=os.getenv('DB_PORT')
