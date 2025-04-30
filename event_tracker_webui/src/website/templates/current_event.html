@@ -49,26 +49,29 @@
                 <div class="card-body">
                     <div class="action-buttons">
                         <div class="action-buttons__main">
-                            {% if data.event_participation == 'True' %}
-                                <button class="btn btn-primary w-100 mb-2" onclick="unSubscribeToEvent(this)" 
-                                        data-user-id="{{ data.user_current_id }}" 
-                                        data-event-id="{{ data.event_id }}">
-                                    Я не пойду
-                                </button>
-                            {% else %}
-                                <button class="btn btn-primary w-100 mb-2" onclick="subscribeToEvent(this)"
-                                        data-user-id="{{ data.user_current_id }}" 
-                                        data-event-id="{{ data.event_id }}">
-                                    Пойду
-                                </button>
-                            {% endif %}
-                            
+                            {% if data.event_status != 'Past' %}
+                                {% if data.event_participation == 'True' %}
+                                    <button class="btn btn-primary w-100 mb-2" onclick="unSubscribeToEvent(this)" 
+                                            data-user-id="{{ data.user_current_id }}" 
+                                            data-event-id="{{ data.event_id }}">
+                                        Я не пойду
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-primary w-100 mb-2" onclick="subscribeToEvent(this)"
+                                            data-user-id="{{ data.user_current_id }}" 
+                                            data-event-id="{{ data.event_id }}">
+                                        Пойду
+                                    </button>
+                                {% endif %}                           
                             <button class="btn btn-outline-secondary w-100" onclick="open_event_form()">
                                 Оповещать
                             </button>
+                            {% else %}
+                            <h4>Мероприятие завершено</h4>
+                        {% endif %}
                         </div>
 
-                        {% if data.user_role == 'Admin' or data.user_event_role == 'Creator' %}
+                        {% if data.user_role == 'Администратор' or data.user_event_role == 'Создатель' %}
                         <div class="action-buttons__admin mt-3 d-flex flex-column gap-2 w-100">
                             <button class="btn btn-outline-primary w-100" onclick="editEvent()">
                                 Изменить

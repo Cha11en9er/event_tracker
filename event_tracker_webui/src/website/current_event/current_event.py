@@ -56,6 +56,7 @@ def current_event(event_id_from_schedule):
                             'event_name', e.event_name,
                             'event_type_name', et.event_type_name,
                             'description', e.description,
+                            'event_status', e.event_status,
                             'participants', array_agg(
                                 json_build_object(
                                     'fullname', u.fullname,
@@ -81,9 +82,10 @@ def current_event(event_id_from_schedule):
                     WHERE
                         e.event_id = %s
                     GROUP BY
-                        e.event_id, e.event_date, e.event_start_time, e.event_end_time, e.event_duration, e.event_name, et.event_type_name, e.description;
+                        e.event_id, e.event_date, e.event_start_time, e.event_end_time, e.event_duration, e.event_name, et.event_type_name, e.description, e.event_status;
     ''', (event_id_from_schedule,))
     event_dict = cursor.fetchone()
+    # print(event_dict)
 
     event_data = event_dict[0]
     event_data['description'] = add_hyperlinks(event_data['description'])
@@ -107,8 +109,8 @@ def current_event(event_id_from_schedule):
     ''', (user_session_id, event_id_from_schedule))
     user_event_info = cursor.fetchone()[0]
 
-    print((user_session_id, event_id_from_schedule))
-    print(user_event_info)
+    # print((user_session_id, event_id_from_schedule))
+    # print(user_event_info)
 
     event_data['event_participation'] = str(user_event_info['is_participant'])
 
