@@ -19,7 +19,7 @@
             <div class="flash-messages">
                 {% for message in messages %}
                     <div class="flash-message">
-                        {{ message }}
+                        {{ message|truncate(50, True, '...') }}
                     </div>
                 {% endfor %}
             </div>
@@ -37,7 +37,7 @@
                 <div class="landing-content">
                     <div class="features-container">
                         <div class="logo-container">
-                            <img src="..\static\uploads\logo.png" alt="Event tracker лого">
+                            <img class="main-logo" src="..\static\uploads\logo.png" alt="Event tracker лого">
                         </div>
                        
                         <div class="feature-item" data-position="top">

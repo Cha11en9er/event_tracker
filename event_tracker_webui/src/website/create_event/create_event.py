@@ -9,24 +9,54 @@ def create_event():
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     event_date = request.form['event_date']
-    event_time = request.form['event_time']
+    event_start_time = request.form['event_time']
     event_name = request.form['event_name']
     event_description = request.form['event_description']
     event_type = request.form.get('event_type_selection')
+    event_duration = request.form.get('event_duration')
+    event_creator_id = request.form.get('event_creator_id')
+
+    # Преобразуем текстовое значение в минуты
+    duration_mapping = {
+        '15': 15,
+        '30': 30,
+        '60': 60,
+        '120': 120
+    }
+    duration_minutes = int(duration_mapping.get(event_duration, 0))
+
+    # Расчет времени окончания
+    start_hours, start_minutes = map(int, event_start_time.split(':'))
+    total_minutes = start_hours * 60 + start_minutes + duration_minutes
+    end_hours = total_minutes // 60
+    end_minutes = total_minutes % 60
+    event_end_time = f"{end_hours:02d}:{end_minutes:02d}"
 
     event_date = event_date.split('-')
-    event_date = event_date[0] + '-' + event_date[1] + '-' + event_date[2] + ' ' + event_time + ':00'
+    event_date = event_date[0] + '-' + event_date[1] + '-' + event_date[2] + ' ' + event_start_time + ':00'
+    event_status = 'Future'
 
     cursor.execute("""
-                    insert into
-                        evt.event
-                    (event_id, event_date, event_time, event_name, description, event_type_id)
-                    values (default, %s, %s, %s, %s, %s)""", (event_date, event_time, event_name, event_description, event_type ))
+                    INSERT INTO evt.event
+                    (event_id, event_date, event_start_time, event_end_time, event_name, description, event_type_id, event_duration, event_status)
+                    VALUES (default, %s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING event_id""", 
+                    (event_date, event_start_time, event_end_time, event_name, event_description, event_type, duration_minutes, event_status))
+
+    event_id = cursor.fetchone()[0]
+
+    cursor.execute("""
+                    INSERT INTO evt.event_participation
+                    (event_participation_id, event_id, user_id, user_event_role_id)
+                    VALUES (default, %s, %s, 3)""",
+                    (event_id, event_creator_id))
 
     connection.commit() 
     cursor.close() 
     connection.close()
     
+    # print((event_date, event_start_time, event_end_time, event_name, event_description, event_type, duration_minutes, event_status))
+
     flash(f'Вы создали мероприятие {event_name}')
 
     return redirect(url_for('schedule_menu.schedule'))

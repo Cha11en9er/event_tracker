@@ -168,12 +168,6 @@ def signal_handler():
 
 if __name__ == "__main__":
     try:
-        # Устанавливаем обработчик сигналов
-        loop = asyncio.get_event_loop()
-        for sig in (signal.SIGTERM, signal.SIGINT):
-            loop.add_signal_handler(sig, signal_handler)
-        
-        # Запускаем основную программу
         asyncio.run(main())
     except KeyboardInterrupt:
         print("\nПрограмма завершена пользователем")
