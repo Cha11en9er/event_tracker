@@ -13,6 +13,8 @@ fi
 if [ -d ".git" ]; then
     echo "Pulling latest changes..."
     git pull
+    echo "switch to dev_new ..."
+    git checkout dev_new
 fi
 
 echo "Make sure your standalone PostgreSQL database is accessible at the host specified in your .env file"
