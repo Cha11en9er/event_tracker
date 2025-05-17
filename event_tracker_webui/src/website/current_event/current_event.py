@@ -56,6 +56,7 @@ def current_event(event_id_from_schedule):
                             'event_name', e.event_name,
                             'event_type_name', et.event_type_name,
                             'description', e.description,
+                            'event_status', e.event_status,
                             'participants', array_agg(
                                 json_build_object(
                                     'fullname', u.fullname,
@@ -81,7 +82,7 @@ def current_event(event_id_from_schedule):
                     WHERE
                         e.event_id = %s
                     GROUP BY
-                        e.event_id, e.event_date, e.event_start_time, e.event_end_time, e.event_duration, e.event_name, et.event_type_name, e.description;
+                        e.event_id, e.event_date, e.event_start_time, e.event_end_time, e.event_duration, e.event_name, et.event_type_name, e.description, e.event_status;
     ''', (event_id_from_schedule,))
     event_dict = cursor.fetchone()
 

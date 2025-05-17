@@ -397,7 +397,7 @@ body {
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    margin-top: 100px;
+    margin-top: 20px;
     margin-bottom: 30px;
     width: 100%;
     max-width: 1200px;
@@ -496,13 +496,18 @@ body {
     background: #f8f9fa;
     padding: 1rem;
     text-align: left;
-    font-weight: 500;
+    max-width: 250px;  
     color: #666;
     border-bottom: 1px solid #e0e0e0;
 }
 
 .events-table td {
     padding: 1rem;
+    white-space: nowrap;
+    line-height: 5.15;
+    overflow: hidden;
+    max-width: 250px;  
+    text-overflow: ellipsis;
     border-bottom: 1px solid #e0e0e0;
 }
 
@@ -577,6 +582,7 @@ body {
     gap: 0.5rem;
     max-height: 200px;
     overflow-y: auto;
+    padding-right: 5px;
 }
 
 .past-event-item {
@@ -584,6 +590,7 @@ body {
     border-radius: 6px;
     background: #f8f9fa;
     transition: background-color 0.2s;
+    cursor: pointer;
 }
 
 .past-event-item:hover {

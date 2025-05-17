@@ -72,9 +72,15 @@
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Уведомленя в Telegram</h6>
                             </div>
+                            {% if user_data[0]['telegram_id'] == None %}
                             <div class="col-sm-9 text-secondary" id="telegram_id">
                                 <button class="btn btn-info" id="setupButton">Настроить</button>
                             </div>
+                            {% else %}
+                            <div class="col-sm-9 text-secondary" id="fullname">
+                                Отправка сообщений настроена. если хотите изменить, нажмите на конпку 'Редактировать'
+                            </div>
+                            {% endif %}
                             <hr>
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Пароль</h6>

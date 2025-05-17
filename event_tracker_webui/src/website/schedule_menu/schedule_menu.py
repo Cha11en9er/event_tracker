@@ -15,7 +15,7 @@ def schedule():
         # Получаем параметры пагинации и поиска
         page = int(request.args.get('page', 1))
         search_info = request.args.get('search_info', '')
-        items_per_page = 6
+        items_per_page = 5
 
         # Получаем типы событий
         cursor.execute('''
@@ -42,7 +42,8 @@ def schedule():
                     evt.event_type AS et ON e.event_type_id = et.event_type_id
                 WHERE 
                     e.event_name ILIKE %s
-                    AND e.event_status = 'Future'
+                    AND (e.event_status = 'Future'
+                    OR e.event_status = 'Goiong')
                 ORDER BY
                     e.event_date
             ) AS subquery;
@@ -117,8 +118,7 @@ def schedule():
         # Форматируем даты для прошедших событий
         for event in past_events:
             event['formatted_time'] = format_date(event['event_date'])
-        
-        print(paginated_data)
+
         return render_template('schedule.html', 
                              events=paginated_data, 
                              past_events=past_events,
