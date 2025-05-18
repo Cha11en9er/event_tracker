@@ -73,7 +73,6 @@ def register():
         elif len(email) == 0:
             flash('Введите свою почту')
         else:
-            # Создаем пользователя и получаем его данные через RETURNING
             cursor.execute("""
                 INSERT INTO evt.user 
                     (fullname, username, password, email, user_role_id) 

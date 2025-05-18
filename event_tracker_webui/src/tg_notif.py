@@ -231,7 +231,6 @@ async def check_and_send_feedback():
 async def main():
     print("Запуск сервиса уведомлений...")
     
-    # Инициализация бота для обработки callback-запросов
     application = Application.builder().token(os.getenv('TG_BOT_TOKEN')).build()
     application.add_handler(CallbackQueryHandler(handle_feedback_response))
     

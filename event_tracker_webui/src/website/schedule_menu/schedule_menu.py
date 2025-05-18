@@ -12,12 +12,10 @@ def schedule():
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     if 'loggedin' in session:
-        # Получаем параметры пагинации и поиска
         page = int(request.args.get('page', 1))
         search_info = request.args.get('search_info', '')
         items_per_page = 5
 
-        # Получаем типы событий
         cursor.execute('''
             SELECT event_type_id, event_type_name 
             FROM evt.event_type 
@@ -25,7 +23,6 @@ def schedule():
         ''')
         event_types = cursor.fetchall()
 
-        # Получаем активные события (Future)
         cursor.execute('''
             SELECT json_agg(subquery)
             FROM (
@@ -76,7 +73,6 @@ def schedule():
         cursor.close()
         connection.close()
 
-        # Форматирование даты
         def format_date(date_str):
             MONTHS = {
                 1: 'Января',
@@ -99,7 +95,6 @@ def schedule():
             year = date_obj.year
             return f"{day} {month}"
 
-        # Форматируем даты для активных событий
         if active_events:
             for event in active_events:
                 event['formatted_time'] = format_date(event['event_date'])
