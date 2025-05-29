@@ -11,6 +11,9 @@
         <span>Главная</span>
     </div>
     <div class="header-right">
+        <button class="schedule-button" onclick="location.href='{{ url_for('reports.reports_page') }}'">
+            Отчёты
+        </button>
         <div class="user-circle" onclick="location.href='{{ url_for('user_page.user_page', user_id_from_form=user_data ) }}'">
             U
         </div>

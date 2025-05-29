@@ -14,6 +14,10 @@ from .search_event.search_event import search_event_blueprint
 from .edit_profile.edit_profile import edit_profile_blueprint
 from .send_notif.send_notif import send_notif_blueprint
 from .end_event.end_event import end_event_blueprint
+from .reports.reports import reports_blueprint
+from .report_general_event_statistics.report_general_event_statistics import report_general_event_statistics_blueprint
+from .report_participant.report_participant import report_participant_blueprint
+from .report_personal.report_personal import report_personal_blueprint
 
 load_dotenv()
 
@@ -42,7 +46,11 @@ def create_app():
         search_event_blueprint,
         edit_profile_blueprint,
         send_notif_blueprint,
-        end_event_blueprint
+        end_event_blueprint,
+        reports_blueprint,
+        report_general_event_statistics_blueprint,
+        report_participant_blueprint,
+        report_personal_blueprint
     ]
 
     # Регистрация всех blueprint'ов и назначение функции подключения к БД

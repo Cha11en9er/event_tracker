@@ -1,0 +1,90 @@
+{% extends 'main.html' %}
+
+{% block title %}Личный отчет{% endblock %}
+
+{% block header %}
+<div class="header">
+    <div class="header-left">
+        <h1>Event Tracker</h1>
+    </div>
+    <nav aria-label="breadcrumb" class="header-center">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item active">
+                <a href="{{ url_for('schedule_menu.schedule') }}">
+                    Главная
+                </a>
+            </li>
+            <li class="breadcrumb-item active">
+                <a href="{{ url_for('reports.reports_page') }}">
+                    Отчёты
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                Личный отчет
+            </li>
+        </ol>
+    </nav>
+    <div class="header-right">
+        <div class="user-circle">
+            <a class="btn_registr" href="{{ url_for('user_page.user_page', user_id_from_form=user_data) }}">U</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block main %}
+<div class="content-section">
+    <h1>Личный отчет</h1>
+</div>
+
+<div class="chart-container">
+    <canvas id="salesChart"></canvas>
+</div>
+
+<style>
+    .chart-container {
+        width: 80%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+</style>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            
+            const salesChart = new Chart(ctx, {
+                type: 'line', // Тип диаграммы - линейная
+                data: {
+                    labels: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+                    datasets: [{
+                        label: 'Продажи (в тыс. руб.)',
+                        data: [120, 190, 170, 220, 250, 210, 240, 280, 300, 320, 350, 400],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Ежемесячные продажи'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -48,5 +48,6 @@ def user_page(user_id_from_form):
 
         user_data['session_user_id'] = session['id']
 
-        print(user_data)    
+        print(user_data)
+
     return render_template('user_page.html', user_data = user_data)

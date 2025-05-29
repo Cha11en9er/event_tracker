@@ -994,3 +994,263 @@ body {
     scrollbar-width: thin;
     scrollbar-color: #c1c1c1 #f1f1f1;
 }
+
+/* reports start */
+
+.header-left h1 {
+    margin: 0;
+    color: #0066FF;
+}
+
+.header-center span {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.schedule-button {
+    padding: 0.5rem 1rem;
+    background: #0066FF;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.schedule-button:hover {
+    background: #0052cc;
+}
+
+.user-circle {
+    width: 40px;
+    height: 40px;
+    background: #0066FF;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.user-circle:hover {
+    background: #0052cc;
+}
+
+.content-section {
+    padding: 2rem;
+    margin-top: 80px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.report-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.report-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.report-icon {
+    width: 48px;
+    height: 48px;
+    background: #e3f2fd;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.report-icon span {
+    font-size: 24px;
+    color: #0066FF;
+}
+
+.report-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.report-description {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.filters-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.filters-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.filter-input {
+    padding: 0.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.apply-filters {
+    padding: 0.75rem 2rem;
+    background: #0066FF;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 1rem;
+    transition: background-color 0.2s;
+}
+
+.apply-filters:hover {
+    background: #0052cc;
+}
+
+/* reports end */
+
+/* report_general_event_statistics start */
+
+.content-section {
+    padding: 2rem;
+    margin-top: 80px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.chart-container {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.table-container {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-top: 2rem;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.stats-table th {
+    background: #f8f9fa;
+    font-weight: 500;
+    color: #666;
+}
+
+.stats-table tr:last-child td {
+    border-bottom: none;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+/* report_general_event_statistics end */
+
+/* Для уменьшения ширины графика до половины filters-section */
+.chart-container.half-width {
+    width: 50%;
+    min-width: 300px;
+    max-width: 600px;
+    height: 60vh;
+    margin: 0 auto;
+    /* Можно добавить display: flex; justify-content: center; если нужно выровнять */
+}
+
+.period-dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.period-inputs {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.date-input {
+    padding: 0.3rem 0.7rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+

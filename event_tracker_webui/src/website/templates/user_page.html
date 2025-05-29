@@ -112,12 +112,20 @@
                 <div class="card participation-card">
                     <div class="card-body">
                         <div class="participation-list">
-                            {% for event in user_data['user_participation'] %}
-                            <div class="participation-item" onclick="location.href='{{ url_for('current_event.current_event', event_id_from_schedule=event['event_id'] ) }}'">
-                                <div class="event-name">{{ event['event_name']|truncate(60, True, '...') }}</div>
-                                <div class="event-role">{{ event['user_event_role'] }}</div>
-                            </div>
-                            {% endfor %}
+                            {% if user_data['user_participation'] and user_data['user_participation']|length > 0 %}
+                                {% for event in user_data['user_participation'] %}
+                                    {% if event['event_id'] is not none %}
+                                    <div class="participation-item" onclick="location.href='{{ url_for('current_event.current_event', event_id_from_schedule=event['event_id'] ) }}'">
+                                        <div class="event-name">{{ event['event_name']|truncate(60, True, '...') }}</div>
+                                        <div class="event-role">{{ event['user_event_role'] }}</div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <div class="participation-item">
+                                    <div class="event-name">Вы пока не участвуете ни в каких мероприятиях</div>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

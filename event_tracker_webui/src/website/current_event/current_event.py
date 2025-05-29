@@ -57,12 +57,12 @@ def current_event(event_id_from_schedule):
                             'event_type_name', et.event_type_name,
                             'description', e.description,
                             'event_status', e.event_status,
-                            'participants', array_agg(
+                            'participants', COALESCE(array_agg(
                                 json_build_object(
                                     'fullname', u.fullname,
                                     'user_id', u.user_id
                                 )
-                            ),
+                            ) FILTER (WHERE u.user_id IS NOT NULL), '{}'),
                             'total_participants', COUNT(u.user_id)  -- Добавляем общее количество участников
                         ) AS event
                     FROM
@@ -85,10 +85,12 @@ def current_event(event_id_from_schedule):
                         e.event_id, e.event_date, e.event_start_time, e.event_end_time, e.event_duration, e.event_name, et.event_type_name, e.description, e.event_status;
     ''', (event_id_from_schedule,))
     event_dict = cursor.fetchone()
-    # print(event_dict)
+
+    if event_dict is None:
+        return render_template('error.html', message='Событие не найдено')
 
     event_data = event_dict[0]
-    event_data['description'] = add_hyperlinks(event_data['description'])
+    event_data['description'] = add_hyperlinks(event_data['description'] if event_data['description'] else '')
     event_data['formatted_time'] = format_date(event_data['event_date'])
 
     cursor.execute('''

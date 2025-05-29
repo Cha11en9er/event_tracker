@@ -1,0 +1,152 @@
+{% extends 'main.html' %}
+
+{% block title %}Общая статистика мероприятий{% endblock %}
+
+{% block header %}
+<div class="header">
+    <div class="header-left">
+        <h1>Event Tracker</h1>
+    </div>
+    <nav aria-label="breadcrumb" class="header-center">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item active">
+                <a href="{{ url_for('schedule_menu.schedule') }}">
+                    Главная
+                </a>
+            </li>
+            <li class="breadcrumb-item active">
+                <a href="{{ url_for('reports.reports_page') }}">
+                    Отчёты
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                Общая статистика
+            </li>
+        </ol>
+    </nav>
+    <div class="header-right">
+        <div class="user-circle">
+            <a class="btn_registr" href="{{ url_for('user_page.user_page', user_id_from_form=user_data) }}">U</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block main %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="content-section">
+    <div class="stats-grid">
+        <div class="chart-container">
+            <div class="section-title">Распределение мероприятий по типам</div>
+            <canvas id="eventTypesChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <div class="section-title">Активность по месяцам</div>
+            <canvas id="monthlyActivityChart"></canvas>
+        </div>
+    </div>
+
+        <div class="table-container">
+            <div class="section-title">Статистика по типам мероприятий</div>
+            <table class="stats-table">
+                <thead>
+                    <tr>
+                        <th>Тип мероприятия</th>
+                        <th>Количество</th>
+                        <th>Всего участников</th>
+                        <th>Средняя посещаемость</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Встречи</td>
+                        <td>24</td>
+                        <td>192</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>Конференции</td>
+                        <td>12</td>
+                        <td>360</td>
+                        <td>30</td>
+                    </tr>
+                    <tr>
+                        <td>Тренинги</td>
+                        <td>18</td>
+                        <td>270</td>
+                        <td>15</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Данные для круговой диаграммы типов мероприятий
+        const eventStatisticsData = {{ event_statistics_data|tojson|safe }};
+        console.log(eventStatisticsData);
+
+        // Подготавливаем данные для графика
+        const event_count = eventStatisticsData.map(item => item.count);
+        const event_type = eventStatisticsData.map(item => item.event_type_name);
+
+        console.log(event_count);
+        console.log(event_type);
+
+        const eventTypesCtx = document.getElementById('eventTypesChart').getContext('2d');
+        new Chart(eventTypesCtx, {
+            type: 'pie',
+            data: {
+                labels: event_type,
+                datasets: [{
+                    data: event_count,
+                    backgroundColor: [
+                        '#4CAF50',
+                        '#2196F3',
+                        '#FFC107'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Данные для графика активности по месяцам
+        const monthlyActivityCtx = document.getElementById('monthlyActivityChart').getContext('2d');
+        new Chart(monthlyActivityCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн'],
+                datasets: [{
+                    label: 'Количество мероприятий',
+                    data: [8, 12, 15, 10, 14, 9],
+                    backgroundColor: '#0066FF'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 5
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
+{% endblock %}

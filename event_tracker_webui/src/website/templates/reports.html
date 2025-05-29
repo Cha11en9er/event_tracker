@@ -1,0 +1,95 @@
+{% extends 'main.html' %}
+
+{% block title %}Отчёты{% endblock %}
+
+{% block header %}
+<div class="header">
+    <div class="header-left">
+        <h1>Event Tracker</h1>
+    </div>
+    <nav aria-label="breadcrumb" class="header-center">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item active">
+                <a href="{{ url_for('schedule_menu.schedule') }}">
+                    Главная
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                Отчёты
+            </li>
+        </ol>
+    </nav>
+    <div class="header-right">
+        <div class="user-circle">
+            <a class="btn_registr" href="{{ url_for('user_page.user_page', user_id_from_form=user_data) }}">U</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block main %}
+<div class="content-section">
+
+    <div class="reports-grid">
+        <div class="report-card" onclick="location.href='{{ url_for('report_general_event_statistics.report_general_event_statistics_page') }}'">
+            <div class="report-icon">
+                <span>📊</span>
+            </div>
+            <div class="report-title">Общая статистика мероприятий</div>
+            <div class="report-description">
+                Сводный отчет по всем проведенным мероприятиям, включая количество участников и статистику посещаемости.
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="report-icon">
+                <span>📈</span>
+            </div>
+            <div class="report-title">Анализ активности</div>
+            <div class="report-description">
+                Детальный анализ активности участников, популярности мероприятий и тенденций посещаемости.
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="report-icon">
+                <span>📅</span>
+            </div>
+            <div class="report-title">Календарный отчет</div>
+            <div class="report-description">
+                Распределение мероприятий по датам с указанием загруженности и пиковых периодов.
+            </div>
+        </div>
+
+        <div class="report-card" onclick="location.href='{{ url_for('report_participant.report_participant_page') }}'">
+            <div class="report-icon">
+                <span>👥</span>
+            </div>
+            <div class="report-title">Отчет по участникам</div>
+            <div class="report-description">
+                Информация о самых активных участниках, их предпочтениях и истории посещений.
+            </div>
+        </div>
+
+        <div class="report-card" onclick="location.href='{{ url_for('report_personal.report_personal_page') }}'">
+            <div class="report-icon">
+                <span>👤</span>
+            </div>
+            <div class="report-title">Личный отчет</div>
+            <div class="report-description">
+                Статистика по каждому участнику, включая количество посещенных мероприятий, их популярность и историю посещений.
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="report-icon">
+                <span>📝</span>
+            </div>
+            <div class="report-title">Сводный отчет</div>
+            <div class="report-description">
+                Комплексный отчет, включающий все ключевые метрики и показатели за выбранный период.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

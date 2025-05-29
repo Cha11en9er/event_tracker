@@ -1,0 +1,245 @@
+{% extends 'main.html' %}
+
+{% block title %}Общая статистика мероприятий{% endblock %}
+
+{% block header %}
+<div class="header">
+    <div class="header-left">
+        <h1>Event Tracker</h1>
+    </div>
+    <nav aria-label="breadcrumb" class="header-center">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item active">
+                <a href="{{ url_for('schedule_menu.schedule') }}">
+                    Главная
+                </a>
+            </li>
+            <li class="breadcrumb-item active">
+                <a href="{{ url_for('reports.reports_page') }}">
+                    Отчёты
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                Отчет по участникам
+            </li>
+        </ol>
+    </nav>
+    <div class="header-right">
+        <div class="user-circle">
+            <a class="btn_registr" href="{{ url_for('user_page.user_page', user_id_from_form=user_data) }}">U</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block main %}
+<div class="content-section">
+    <div class="filters-section">
+        <div class="filters-title">Фильтры отчётов</div>
+        <form id="filterForm" class="filters-grid">
+            <div class="filter-group">
+                <label class="filter-label">Период</label>
+                <div class="period-dropdown">
+                    <select id="periodType" name="periodType" class="filter-input">
+                        <option value="date">По дате</option>
+                        <option value="week">По неделям</option>
+                        <option value="month">По месяцам</option>
+                        <option value="quarter">По кварталам</option>
+                        <option value="year">По годам</option>
+                    </select>
+                    <div id="periodInputs" class="period-inputs">
+                        <!-- По умолчанию поля для дат -->
+                        <label>от <input type="date" id="dateFrom" name="dateFrom" class="date-input"></label>
+                        <label>до <input type="date" id="dateTo" name="dateTo" class="date-input"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Тип события</label>
+                <select id="eventType" name="eventType" class="filter-input">
+                    <option value="all">Все типы</option>
+                    {% for item in base_event_type_name %}
+                        <option value="{{ item }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+        <button class="apply-filters" onclick="applyFilters()">Применить фильтры</button>
+    </div>
+
+    <div class="chart-container half-width">
+        <canvas id="participantChart"></canvas>
+    </div>
+</div>
+
+<!-- Подключаем Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+let participantChart = null;
+
+function updateChart(data) {
+    const ctx = document.getElementById('participantChart').getContext('2d');
+    
+    if (participantChart) {
+        participantChart.destroy();
+    }
+    
+    // Ensure we have the correct data structure
+    const chartData = {
+        labels: data.participant_data.map(item => item.fullname),
+        datasets: [{
+            label: 'Количество мероприятий',
+            data: data.participant_data.map(item => item.count),
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    };
+    
+    participantChart = new Chart(ctx, {
+        type: 'bar',
+        data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: `10 самых вовлечённых человек ${data.period_display || 'за последние 10 дней'}`,
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Количество мероприятий'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Участники'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function applyFilters() {
+    const form = document.getElementById('filterForm');
+    const formData = new FormData(form);
+    const params = new URLSearchParams(formData);
+    
+    // Add current URL parameters
+    const currentUrl = new URL(window.location.href);
+    currentUrl.search = params.toString();
+    
+    // Fetch new data with proper headers
+    fetch(currentUrl.toString(), {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data && data.participant_data) {
+            updateChart(data);
+        } else {
+            console.error('Invalid data format received');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при обновлении данных');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initial chart with default data
+    const initialData = {
+        participant_data: {{ participant_data|tojson|safe }},
+        period_display: "{{ period_display }}"
+    };
+    updateChart(initialData);
+
+    // Period type change handler
+    const periodType = document.getElementById('periodType');
+    const periodInputs = document.getElementById('periodInputs');
+
+    periodType.addEventListener('change', function() {
+        let html = '';
+        if (this.value === 'date') {
+            html = `
+                <label>от <input type="date" id="dateFrom" name="dateFrom" class="date-input"></label>
+                <label>до <input type="date" id="dateTo" name="dateTo" class="date-input"></label>
+            `;
+        } else if (this.value === 'week') {
+            html = `
+                <label>Неделя
+                    <select id="weekSelect" name="week" class="date-input">
+                        <option value="1">1-я неделя текущего месяца</option>
+                        <option value="2">2-я неделя текущего месяца</option>
+                        <option value="3">3-я неделя текущего месяца</option>
+                        <option value="4">4-я неделя текущего месяца</option>
+                    </select>
+                </label>
+            `;
+        } else if (this.value === 'month') {
+            html = `
+                <label>Месяц
+                    <select id="monthSelect" name="month" class="date-input">
+                        <option value="1">Январь</option>
+                        <option value="2">Февраль</option>
+                        <option value="3">Март</option>
+                        <option value="4">Апрель</option>
+                        <option value="5">Май</option>
+                        <option value="6">Июнь</option>
+                        <option value="7">Июль</option>
+                        <option value="8">Август</option>
+                        <option value="9">Сентябрь</option>
+                        <option value="10">Октябрь</option>
+                        <option value="11">Ноябрь</option>
+                        <option value="12">Декабрь</option>
+                    </select>
+                </label>
+            `;
+        } else if (this.value === 'quarter') {
+            html = `
+                <label>Квартал
+                    <select id="quarterSelect" name="quarter" class="date-input">
+                        <option value="1">1 квартал</option>
+                        <option value="2">2 квартал</option>
+                        <option value="3">3 квартал</option>
+                        <option value="4">4 квартал</option>
+                    </select>
+                </label>
+            `;
+        } else if (this.value === 'year') {
+            html = `
+                <label>Год
+                    <input type="number" id="yearInput" name="year" class="date-input" min="2000" max="2100" value="${new Date().getFullYear()}">
+                </label>
+            `;
+        }
+        periodInputs.innerHTML = html;
+    });
+});
+</script>
+{% endblock %}
