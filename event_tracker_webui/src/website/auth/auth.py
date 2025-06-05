@@ -21,11 +21,11 @@ def login():
                             u.fullname,
                             u.username,
                             u.password,
-                            r.role_description,
+                            r.role_name,
                             u.telegram_id
                           FROM evt.user as u 
                           INNER JOIN evt.role AS r
-                          ON u.user_id = r.user_id
+                          ON u.user_role_id = r.role_id
                           WHERE username = %s''', (username,))
         account = cursor.fetchone()
 
