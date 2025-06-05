@@ -14,8 +14,8 @@ def subscribe_to_event():
     cursor.execute('''
                     insert into
                         evt.event_participation
-                    (event_id, user_id)
-                    values(%s, %s)''', (event_id, user_id, ))
+                    (event_participation_id, event_id, user_id, user_event_role_id)
+                    values(default, %s, %s, 5)''', (event_id, user_id))
     connection.commit() 
     cursor.close() 
     connection.close()

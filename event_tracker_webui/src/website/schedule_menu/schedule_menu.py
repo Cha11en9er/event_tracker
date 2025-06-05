@@ -12,12 +12,10 @@ def schedule():
     cursor = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     if 'loggedin' in session:
-        # Получаем параметры пагинации и поиска
         page = int(request.args.get('page', 1))
         search_info = request.args.get('search_info', '')
-        items_per_page = 6
+        items_per_page = 5
 
-        # Получаем типы событий
         cursor.execute('''
             SELECT event_type_id, event_type_name 
             FROM evt.event_type 
@@ -25,7 +23,6 @@ def schedule():
         ''')
         event_types = cursor.fetchall()
 
-        # Получаем активные события (будущие)
         cursor.execute('''
             SELECT json_agg(subquery)
             FROM (
@@ -35,21 +32,21 @@ def schedule():
                     COALESCE(e.description, 'нету описания') AS description,
                     COALESCE(et.event_type_name, 'нет типа') AS event_type_name,
                     e.event_id,
-                    e.event_time
+                    e.event_duration
                 FROM
                     evt.event AS e
                 LEFT JOIN
                     evt.event_type AS et ON e.event_type_id = et.event_type_id
                 WHERE 
                     e.event_name ILIKE %s
-                    AND e.event_date >= CURRENT_DATE
+                    AND e.event_status = 'Future'
                 ORDER BY
                     e.event_date
             ) AS subquery;
         ''', ('%' + search_info + '%',))
         active_events = cursor.fetchone()[0]
 
-        # Получаем прошедшие события
+        # Получаем прошедшие события (Past)
         cursor.execute('''
             SELECT json_agg(subquery)
             FROM (
@@ -63,7 +60,7 @@ def schedule():
                 LEFT JOIN
                     evt.event_type AS et ON e.event_type_id = et.event_type_id
                 WHERE 
-                    e.event_date < CURRENT_DATE
+                    e.event_status = 'Past'
                 ORDER BY
                     e.event_date DESC
                 LIMIT 50
@@ -76,14 +73,28 @@ def schedule():
         cursor.close()
         connection.close()
 
-        # Форматирование даты
         def format_date(date_str):
+            MONTHS = {
+                1: 'Января',
+                2: 'Февраля',
+                3: 'Марта',
+                4: 'Апреля',
+                5: 'Мая',
+                6: 'Июня',
+                7: 'Июля',
+                8: 'Августа',
+                9: 'Сентября',
+                10: 'Октября',
+                11: 'Ноября',
+                12: 'Декабря'
+            }
+            
             date_obj = datetime.fromisoformat(date_str)
             day = date_obj.day
-            month = date_obj.strftime('%B')
+            month = MONTHS[date_obj.month]
+            year = date_obj.year
             return f"{day} {month}"
 
-        # Форматируем даты для активных событий
         if active_events:
             for event in active_events:
                 event['formatted_time'] = format_date(event['event_date'])
@@ -101,7 +112,8 @@ def schedule():
         # Форматируем даты для прошедших событий
         for event in past_events:
             event['formatted_time'] = format_date(event['event_date'])
-
+        
+        print(paginated_data)
         return render_template('schedule.html', 
                              events=paginated_data, 
                              past_events=past_events,

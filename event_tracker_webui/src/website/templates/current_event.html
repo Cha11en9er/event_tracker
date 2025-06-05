@@ -12,11 +12,11 @@
             <li class="breadcrumb-item">
                 <a href="{{ url_for('schedule_menu.schedule') }}">Главная</a>
             </li>
-            <li class="breadcrumb-item active">{{ data.event_name }}</li>
+            <li class="breadcrumb-item active">{{ data.event_name|truncate(30, True, '...') }}</li>
         </ol>
     </nav>
     <div class="header-right">
-        <div class="user-circle" onclick="location.href='{{ url_for('user_page.user_page', user_id_from_form=data.current_user_role_id ) }}'">
+        <div class="user-circle" onclick="location.href='{{ url_for('user_page.user_page', user_id_from_form=data.user_current_id ) }}'">
             U
         </div>
     </div>
@@ -27,8 +27,9 @@
 <div class="container mt-5" id="current_event_main">
     <div class="card mb-3">
         <div class="card-body text-start">
-            <h2 class="card-title">{{ data.event_name }}</h2>
-            <p class="card-text">Дата: {{ data.formatted_time }} Время: {{ data.event_time }}</p>
+            <h2 class="card-title">{{ data.event_name|truncate(300, True, '...') }}</h2>
+            <p class="card-text">Дата: {{ data.formatted_time }}</p>
+            <p class="card-text">Время: {{ data.event_start_time }} - {{ data.event_end_time }}</p>
             <p class="card-text">Тип: {{ data.event_type_name }}</p>
         </div>
     </div>
@@ -48,34 +49,41 @@
                 <div class="card-body">
                     <div class="action-buttons">
                         <div class="action-buttons__main">
-                            {% if data.event_participation == 'True' %}
-                                <button class="btn btn-primary w-100 mb-2" onclick="unSubscribeToEvent(this)" 
-                                        data-user-id="{{ data.user_current_id }}" 
-                                        data-event-id="{{ data.event_id }}">
-                                    Я пойду
-                                </button>
-                            {% else %}
-                                <button class="btn btn-primary w-100 mb-2" onclick="subscribeToEvent(this)"
-                                        data-user-id="{{ data.user_current_id }}" 
-                                        data-event-id="{{ data.event_id }}">
-                                    Пойду
-                                </button>
-                            {% endif %}
-                            
+                            {% if data.event_status != 'Past' %}
+                                {% if data.event_participation == 'True' %}
+                                    <button class="btn btn-primary w-100 mb-2" onclick="unSubscribeToEvent(this)" 
+                                            data-user-id="{{ data.user_current_id }}" 
+                                            data-event-id="{{ data.event_id }}">
+                                        Я не пойду
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-primary w-100 mb-2" onclick="subscribeToEvent(this)"
+                                            data-user-id="{{ data.user_current_id }}" 
+                                            data-event-id="{{ data.event_id }}">
+                                        Пойду
+                                    </button>
+                                {% endif %}                           
                             <button class="btn btn-outline-secondary w-100" onclick="open_event_form()">
                                 Оповещать
                             </button>
+                            {% else %}
+                            <h4>Мероприятие завершено</h4>
+                        {% endif %}
                         </div>
 
-                        {% if data.user_role == 'Admin' %}
-                        <div class="action-buttons__admin mt-3">
-                            <button class="btn btn-outline-primary" onclick="editEvent()">
+                        {% if data.user_role == 'Администратор' or data.user_event_role == 'Создатель' %}
+                        <div class="action-buttons__admin mt-3 d-flex flex-column gap-2 w-100">
+                            <button class="btn btn-outline-primary w-100" onclick="editEvent()">
                                 Изменить
                             </button>
-                            <form action="/delete_event" method="POST" class="d-inline"> 
-                                <button class="btn btn-danger">Удалить</button>
+                            <form action="/delete_event" method="POST" class="w-100"> 
+                                <button class="btn btn-danger w-100">Удалить</button>
                                 <input type="hidden" name="delete_event_id" value="{{ data.event_id }}">
                                 <input type="hidden" name="delete_event_name" value="{{ data.event_name }}">
+                            </form>
+                            <form action="/end_event" method="POST" class="w-100"> 
+                                <button class="btn btn-outline-primary w-100">Завершить</button>
+                                <input type="hidden" name="event_id" value="{{ data.event_id }}">
                             </form>
                         </div>
                         {% endif %}
@@ -133,6 +141,7 @@
                     <input type="hidden" name="notif_user_id" value="{{ data.user_current_id }}">
                     <input type="hidden" name="notif_user_tg_id" value="{{ data.user_telegram_id }}">
                     <input type="hidden" name="notif_time" id="notif_time" value="">
+                    <input type="hidden" name="notif_event_id" value="{{ data.event_id }}">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="close_event_form()">Закрыть</button>

@@ -62,36 +62,50 @@ def register():
 
         cursor.execute('SELECT * FROM evt.user WHERE username = %s', (username,))
         account_register = cursor.fetchone()
-        if account_register: # проверка на наличие аккаунта
-            flash('Такой аккаунт сущесвтует, войдите в него')
-        elif len(fullname) == 0: # првоерка на наличие имени
+        if account_register:
+            flash('Такой аккаунт существует, войдите в него')
+        elif len(fullname) == 0:
             flash('Введите своё имя')
-        elif len(username) == 0: # првоерка на наличие логина
+        elif len(username) == 0:
             flash('Введите свой логин')
-        elif len(password) == 0: # првоерка на наличие пароля
+        elif len(password) == 0:
             flash('Введите свой пароль')
-        elif len(email) == 0: # првоерка на наличие почты
-            flash('Введите свою почу')
+        elif len(email) == 0:
+            flash('Введите свою почту')
         else:
-            cursor.execute("INSERT INTO evt.user (fullname, username, password, email) VALUES (%s,%s,%s,%s)", (fullname, username, _hashed_password, email))
-            connection.commit()
-            flash('Вы зарегестрировались!')
+            cursor.execute("""
+                INSERT INTO evt.user 
+                    (fullname, username, password, email, user_role_id) 
+                VALUES 
+                    (%s, %s, %s, %s, 2)
+                RETURNING 
+                    user_id, 
+                    fullname, 
+                    username,
+                    telegram_id
+                """, (fullname, username, _hashed_password, email))
+            
+            user_data = cursor.fetchone()
 
-            cursor.execute('SELECT * FROM evt.user WHERE username = %s', (username,))
-            account_data = cursor.fetchone()
-
-            cursor.execute("INSERT INTO evt.role (user_id, role_description) VALUES (%s, %s)", (account_data[0], 'Viewer'))
-            connection.commit()
-
-            cursor.execute('SELECT role_description FROM evt.role WHERE user_id = %s', (account_data[0],))
+            # Получаем название роли через JOIN
+            cursor.execute("""
+                SELECT r.role_name 
+                FROM evt.role AS r 
+                INNER JOIN evt.user AS u
+                ON %s = r.role_id
+            """, (user_data['user_id'],))
             role_data = cursor.fetchone()
 
+            connection.commit()
+            flash('Вы зарегистрировались!')
+
+            # Устанавливаем данные сессии
             session['loggedin'] = True
-            session['id'] = account_data[0]
-            session['username'] = account_data[2]
-            session['fullname'] = account_data[1]
-            session['role'] = role_data[0]
-            session['telegram_id'] = account_data[5]
+            session['id'] = user_data['user_id']
+            session['username'] = user_data['username']
+            session['fullname'] = user_data['fullname']
+            session['role'] = role_data['role_name']
+            session['telegram_id'] = user_data['telegram_id']
 
             return redirect(url_for('schedule_menu.schedule'))
 
